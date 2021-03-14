@@ -19,8 +19,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
+using GalaSoft.MvvmLight.Messaging;
 
 using Quester.Pages;
+using Quester.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -70,6 +72,17 @@ namespace Quester
         {
             this.InitializeComponent();
 
+
+            this.DataContext = new MainViewModel();
+            Messenger.Default.Register<NotificationMessage>(this, (nm) =>
+            {
+                //Check which message you've sent
+                if (nm.Notification == "Navigate")
+                {
+                    Console.WriteLine(nm.ToString());
+                    
+                }
+            });
 
             // Workaround for VisualState issue that should be fixed
             // by https://github.com/microsoft/microsoft-ui-xaml/pull/2271
@@ -566,6 +579,17 @@ namespace Quester
         {
             controlsSearchBox.Focus(FocusState.Programmatic);
         }
+
+        public void NavigateTo(PageType pageType)
+        {
+            switch(pageType)
+            {
+                case PageType.NewProject:
+                    PageHeader.Title = "New Project";
+                    rootFrame.Navigate(typeof(NewProjectPage));
+                    break;
+            }
+        }
     }
 
 
@@ -575,5 +599,12 @@ namespace Quester
         Mobile,
         Other,
         Xbox
+    }
+
+    public enum PageType
+    {
+        Settings,
+        ProjectSelector,
+        NewProject
     }
 }

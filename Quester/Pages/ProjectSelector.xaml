@@ -7,15 +7,10 @@
     xmlns:data="using:Quester.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Quester.ViewModels"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <Page.Resources>
-        <DataTemplate x:Key="NavigationViewHeaderTemplate">
-            <quester:PageHeader
-                Title="XD"
-                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                BackgroundColorOpacity="1" />
-        </DataTemplate>
         <DataTemplate x:Key="ImageTemplate" x:DataType="data:ProjectButtonData">
             <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150"  BorderThickness="2"  Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind ProjectTooltip}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
                 <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -76,7 +71,7 @@
         </Button>
 
         <StackPanel Orientation="Vertical">
-            <Button Grid.Column="0" Width="150" Height="150" BorderThickness="2" ToolTipService.ToolTip="Create New Project..." VerticalAlignment="Top" Style="{ThemeResource ButtonRevealStyle}" Margin="0,0,20,0">
+            <Button x:Name="CreateProjectButton" Click="{Binding Close}" Grid.Column="0" Width="150" Height="150" BorderThickness="2" ToolTipService.ToolTip="Create New Project..." VerticalAlignment="Top" Style="{ThemeResource ButtonRevealStyle}" Margin="0,0,20,0">
                 <SymbolIcon Symbol="Add"/>
             </Button>
             <Button Grid.Column="0" Width="150" Height="150" BorderThickness="2" ToolTipService.ToolTip="Open Project..." VerticalAlignment="Top" Style="{ThemeResource ButtonRevealStyle}" Margin="0,20,20,0">
