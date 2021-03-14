@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 
+using Quester.Pages;
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Quester
@@ -56,9 +58,19 @@ namespace Quester
             }
         }
 
+        public PageHeader PageHeader
+        {
+            get
+            {
+                return UIHelper.GetDescendantsOfType<PageHeader>(NavigationViewControl).FirstOrDefault();
+            }
+        }
+
         public MainPage()
         {
             this.InitializeComponent();
+
+
             // Workaround for VisualState issue that should be fixed
             // by https://github.com/microsoft/microsoft-ui-xaml/pull/2271
             NavigationViewControl.PaneDisplayMode = muxc.NavigationViewPaneDisplayMode.Left;
@@ -91,6 +103,8 @@ namespace Quester
             var viewTitleBar = ApplicationView.GetForCurrentView().TitleBar;
             viewTitleBar.ButtonBackgroundColor = Colors.Transparent;
             viewTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            viewTitleBar.ButtonHoverBackgroundColor = ColorHelper.FromArgb(100, 0, 0, 0);
+            viewTitleBar.ButtonPressedBackgroundColor = Colors.Transparent;
             viewTitleBar.ButtonForegroundColor = (Color)Resources["SystemBaseHighColor"];
 
 
@@ -102,6 +116,9 @@ namespace Quester
             Loaded += delegate (object sender, RoutedEventArgs e)
             {
                 NavigationOrientationHelper.UpdateTitleBar(NavigationOrientationHelper.IsLeftMode);
+
+                PageHeader.Title = "Select or Create Project";
+                rootFrame.Navigate(typeof(ProjectSelector));
             };
 
             NavigationViewControl.RegisterPropertyChangedCallback(muxc.NavigationView.PaneDisplayModeProperty, new DependencyPropertyChangedCallback(OnPaneDisplayModeChanged));
@@ -155,50 +172,49 @@ namespace Quester
 
         private void AddNavigationMenuItems()
         {
-            //foreach (var group in ControlInfoDataSource.Instance.Groups.OrderBy(i => i.Title))
-            //{
-            //    var itemGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = group.Title, Tag = group.UniqueId, DataContext = group, Icon = GetIcon(group.ImagePath) };
-            //
-            //    var groupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {group.Title} Samples", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = group };
-            //    groupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
-            //    itemGroup.ContextFlyout = new MenuFlyout() { Items = { groupMenuFlyoutItem } };
-            //
-            //    AutomationProperties.SetName(itemGroup, group.Title);
-            //
-            //    foreach (var item in group.Items)
-            //    {
-            //        var itemInGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = item.Title, Tag = item.UniqueId, DataContext = item, Icon = GetIcon(item.ImagePath) };
-            //
-            //        var itemInGroupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {item.Title} Sample", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = item };
-            //        itemInGroupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
-            //        itemInGroup.ContextFlyout = new MenuFlyout() { Items = { itemInGroupMenuFlyoutItem } };
-            //
-            //        itemGroup.MenuItems.Add(itemInGroup);
-            //        AutomationProperties.SetName(itemInGroup, item.Title);
-            //    }
-            //
-            //    NavigationViewControl.MenuItems.Add(itemGroup);
-            //
-            //    if (group.UniqueId == "AllControls")
-            //    {
-            //        this._allControlsMenuItem = itemGroup;
-            //    }
-            //    else if (group.UniqueId == "NewControls")
-            //    {
-            //        this._newControlsMenuItem = itemGroup;
-            //    }
-            //}
-
-            // Move "What's New" and "All Controls" to the top of the NavigationView
-            NavigationViewControl.MenuItems.Remove(_allControlsMenuItem);
-            NavigationViewControl.MenuItems.Remove(_newControlsMenuItem);
-            NavigationViewControl.MenuItems.Insert(0, _allControlsMenuItem);
-            NavigationViewControl.MenuItems.Insert(0, _newControlsMenuItem);
-
-            // Separate the All/New items from the rest of the categories.
-            NavigationViewControl.MenuItems.Insert(2, new Microsoft.UI.Xaml.Controls.NavigationViewItemSeparator());
-
-            //_newControlsMenuItem.Loaded += OnNewControlsMenuItemLoaded;
+        //   
+        //       var itemGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = "ProjectSelector", Tag = "ProjectSelector", Icon = new FontIcon() { Glyph = "\uE8C8" } };
+        //   
+        //       //var groupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {group.Title} Samples", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = group };
+        //       //groupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
+        //       //itemGroup.ContextFlyout = new MenuFlyout() { Items = { groupMenuFlyoutItem } };
+        //   
+        //       AutomationProperties.SetName(itemGroup, "ProjectSelector");
+        //   
+        //      //foreach (var item in group.Items)
+        //      //{
+        //      //    var itemInGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = item.Title, Tag = item.UniqueId, DataContext = item, Icon = GetIcon(item.ImagePath) };
+        //      //
+        //      //    var itemInGroupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {item.Title} Sample", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = item };
+        //      //    itemInGroupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
+        //      //    itemInGroup.ContextFlyout = new MenuFlyout() { Items = { itemInGroupMenuFlyoutItem } };
+        //      //
+        //      //    itemGroup.MenuItems.Add(itemInGroup);
+        //      //    AutomationProperties.SetName(itemInGroup, item.Title);
+        //      // }
+        //   
+        //       NavigationViewControl.MenuItems.Add(itemGroup);
+        //   
+        //       //if (group.UniqueId == "AllControls")
+        //       //{
+        //       //    this._allControlsMenuItem = itemGroup;
+        //       //}
+        //       //else if (group.UniqueId == "NewControls")
+        //       //{
+        //       //    this._newControlsMenuItem = itemGroup;
+        //       //}
+        //   
+        //
+        //   // Move "What's New" and "All Controls" to the top of the NavigationView
+        //   NavigationViewControl.MenuItems.Remove(_allControlsMenuItem);
+        //   NavigationViewControl.MenuItems.Remove(_newControlsMenuItem);
+        //   NavigationViewControl.MenuItems.Insert(0, _allControlsMenuItem);
+        //   NavigationViewControl.MenuItems.Insert(0, _newControlsMenuItem);
+        //
+        //   // Separate the All/New items from the rest of the categories.
+        //   NavigationViewControl.MenuItems.Insert(2, new Microsoft.UI.Xaml.Controls.NavigationViewItemSeparator());
+        //
+        //   //_newControlsMenuItem.Loaded += OnNewControlsMenuItemLoaded;
         }
 
         private void OnMenuFlyoutItemClick(object sender, RoutedEventArgs e)
@@ -266,53 +282,65 @@ namespace Quester
             // Close any open teaching tips before navigation
             CloseTeachingTips();
 
-            if (args.InvokedItemContainer.IsSelected)
+            if (args.InvokedItemContainer == null || args.InvokedItemContainer.IsSelected)
             {
                 // Clicked on an item that is already selected,
                 // Avoid navigating to the same page again causing movement.
                 return;
             }
+            
+            if (args.IsSettingsInvoked)
+            {
+                if (rootFrame.CurrentSourcePageType != typeof(SettingsPage))
+                {
+                    PageHeader.Title = "Settings";
+                    rootFrame.Navigate(typeof(ProjectSelector));
+                }
+            }
+            else
+            {
+                switch(args.InvokedItemContainer.Tag)
+                {
+                    case "home":
+                        PageHeader.Title = "Project Selector";
+                        rootFrame.Navigate(typeof(ProjectSelector));
+                        break;
 
-            //if (args.IsSettingsInvoked)
-            //{
-            //    if (rootFrame.CurrentSourcePageType != typeof(SettingsPage))
-            //    {
-            //        rootFrame.Navigate(typeof(SettingsPage));
-            //    }
-            //}
-            //else
-            //{
-            //    var invokedItem = args.InvokedItemContainer;
-            //
-            //    if (invokedItem == _allControlsMenuItem)
-            //    {
-            //        if (rootFrame.CurrentSourcePageType != typeof(AllControlsPage))
-            //        {
-            //            rootFrame.Navigate(typeof(AllControlsPage));
-            //        }
-            //    }
-            //    else if (invokedItem == _newControlsMenuItem)
-            //    {
-            //        if (rootFrame.CurrentSourcePageType != typeof(NewControlsPage))
-            //        {
-            //            rootFrame.Navigate(typeof(NewControlsPage));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (invokedItem.DataContext is ControlInfoDataGroup)
-            //        {
-            //            var itemId = ((ControlInfoDataGroup)invokedItem.DataContext).UniqueId;
-            //            rootFrame.Navigate(typeof(SectionPage), itemId);
-            //        }
-            //        else if (invokedItem.DataContext is ControlInfoDataItem)
-            //        {
-            //            var item = (ControlInfoDataItem)invokedItem.DataContext;
-            //            rootFrame.Navigate(typeof(ItemPage), item.UniqueId);
-            //        }
-            //
-            //    }
-            //}
+                }
+                //var invokedItem = args.InvokedItemContainer;
+                //
+                //if (invokedItem == _allControlsMenuItem)
+                //{
+                //    if (rootFrame.CurrentSourcePageType != typeof(ProjectSelector))
+                //    
+                //    {
+                //        PageHeader.Title = "Project Selector";
+                //        rootFrame.Navigate(typeof(ProjectSelector));
+                //    }
+                //}
+
+                //else if (invokedItem == _newControlsMenuItem)
+                //{
+                //    if (rootFrame.CurrentSourcePageType != typeof(NewControlsPage))
+                //    {
+                //        rootFrame.Navigate(typeof(NewControlsPage));
+                //    }
+                //}
+                //else
+                //{
+                //    if (invokedItem.DataContext is ControlInfoDataGroup)
+                //    {
+                //        var itemId = ((ControlInfoDataGroup)invokedItem.DataContext).UniqueId;
+                //        rootFrame.Navigate(typeof(SectionPage), itemId);
+                //    }
+                //    else if (invokedItem.DataContext is ControlInfoDataItem)
+                //    {
+                //        var item = (ControlInfoDataItem)invokedItem.DataContext;
+                //        rootFrame.Navigate(typeof(ItemPage), item.UniqueId);
+                //    }
+                //
+                //}
+            }
         }
 
         private void OnRootFrameNavigated(object sender, NavigationEventArgs e)
@@ -332,11 +360,11 @@ namespace Quester
         }
         private void CloseTeachingTips()
         {
-            //if (Current?.PageHeader != null)
-            //{
-            //    Current.PageHeader.TeachingTip1.IsOpen = false;
-            //    Current.PageHeader.TeachingTip3.IsOpen = false;
-            //}
+            if (Current?.PageHeader != null)
+            {
+                Current.PageHeader.TeachingTip1.IsOpen = false;
+                Current.PageHeader.TeachingTip3.IsOpen = false;
+            }
         }
 
         private void OnControlsSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -521,17 +549,17 @@ namespace Quester
 
         private void UpdateHeaderMargin(Microsoft.UI.Xaml.Controls.NavigationView sender)
         {
-            //if (PageHeader != null)
-            //{
-            //    if (sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal)
-            //    {
-            //        Current.PageHeader.HeaderPadding = (Thickness)App.Current.Resources["PageHeaderMinimalPadding"];
-            //    }
-            //    else
-            //    {
-            //        Current.PageHeader.HeaderPadding = (Thickness)App.Current.Resources["PageHeaderDefaultPadding"];
-            //    }
-            //}
+            if (PageHeader != null)
+            {
+                if (sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal)
+                {
+                    Current.PageHeader.HeaderPadding = (Thickness)App.Current.Resources["PageHeaderMinimalPadding"];
+                }
+                else
+                {
+                    Current.PageHeader.HeaderPadding = (Thickness)App.Current.Resources["PageHeaderDefaultPadding"];
+                }
+            }
         }
 
         private void CtrlF_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
