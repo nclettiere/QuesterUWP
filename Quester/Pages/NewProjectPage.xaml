@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBox AutomationProperties.Name="simple TextBox"/>
+    <Grid Background="#20000000" Padding="20,0,0,0">
+        
     </Grid>
 </Page>

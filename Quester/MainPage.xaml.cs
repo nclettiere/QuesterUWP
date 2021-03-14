@@ -10,19 +10,23 @@ using Windows.Foundation.Metadata;
 using Windows.Gaming.Input;
 using Windows.System;
 using Windows.System.Profile;
-using Windows.UI;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Automation;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Automation;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Messaging;
 
 using Quester.Pages;
 using Quester.ViewModels;
+using Windows.UI.Xaml.Controls;
+using Windows.UI;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,10 +35,14 @@ namespace Quester
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    /// 
+
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
         public static Frame RootFrame = null;
+        private static Type CurrentFrameType = null;
+        private static object LastNavSelectedItem = null;
 
         public VirtualKey ArrowKey;
 
@@ -71,16 +79,20 @@ namespace Quester
         public MainPage()
         {
             this.InitializeComponent();
-
-
             this.DataContext = new MainViewModel();
+            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
             Messenger.Default.Register<NotificationMessage>(this, (nm) =>
             {
                 //Check which message you've sent
-                if (nm.Notification == "Navigate")
+                if (nm.Target.Equals("Navigate"))
                 {
-                    Console.WriteLine(nm.ToString());
-                    
+                    switch(nm.Notification)
+                    {
+                        case "NewProject":
+                            NavigateTo(PageType.NewProject);
+                            break;
+                    }
                 }
             });
 
@@ -91,7 +103,6 @@ namespace Quester
             //_navHelper = new RootFrameNavigationHelper(rootFrame, NavigationViewControl);
 
             SetDeviceFamily();
-            AddNavigationMenuItems();
             Current = this;
             RootFrame = rootFrame;
 
@@ -124,14 +135,14 @@ namespace Quester
             _isKeyboardConnected = Convert.ToBoolean(new KeyboardCapabilities().KeyboardPresent);
 
 
+
             // remove the solid-colored backgrounds behind the caption controls and system back button if we are in left mode
             // This is done when the app is loaded since before that the actual theme that is used is not "determined" yet
             Loaded += delegate (object sender, RoutedEventArgs e)
             {
                 NavigationOrientationHelper.UpdateTitleBar(NavigationOrientationHelper.IsLeftMode);
-
-                PageHeader.Title = "Select or Create Project";
-                rootFrame.Navigate(typeof(ProjectSelector));
+                AddNavigationMenuItems();
+                //NavigateTo(PageType.ProjectSelector);
             };
 
             NavigationViewControl.RegisterPropertyChangedCallback(muxc.NavigationView.PaneDisplayModeProperty, new DependencyPropertyChangedCallback(OnPaneDisplayModeChanged));
@@ -185,49 +196,21 @@ namespace Quester
 
         private void AddNavigationMenuItems()
         {
-        //   
-        //       var itemGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = "ProjectSelector", Tag = "ProjectSelector", Icon = new FontIcon() { Glyph = "\uE8C8" } };
-        //   
-        //       //var groupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {group.Title} Samples", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = group };
-        //       //groupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
-        //       //itemGroup.ContextFlyout = new MenuFlyout() { Items = { groupMenuFlyoutItem } };
-        //   
-        //       AutomationProperties.SetName(itemGroup, "ProjectSelector");
-        //   
-        //      //foreach (var item in group.Items)
-        //      //{
-        //      //    var itemInGroup = new Microsoft.UI.Xaml.Controls.NavigationViewItem() { Content = item.Title, Tag = item.UniqueId, DataContext = item, Icon = GetIcon(item.ImagePath) };
-        //      //
-        //      //    var itemInGroupMenuFlyoutItem = new MenuFlyoutItem() { Text = $"Copy Link to {item.Title} Sample", Icon = new FontIcon() { Glyph = "\uE8C8" }, Tag = item };
-        //      //    itemInGroupMenuFlyoutItem.Click += this.OnMenuFlyoutItemClick;
-        //      //    itemInGroup.ContextFlyout = new MenuFlyout() { Items = { itemInGroupMenuFlyoutItem } };
-        //      //
-        //      //    itemGroup.MenuItems.Add(itemInGroup);
-        //      //    AutomationProperties.SetName(itemInGroup, item.Title);
-        //      // }
-        //   
-        //       NavigationViewControl.MenuItems.Add(itemGroup);
-        //   
-        //       //if (group.UniqueId == "AllControls")
-        //       //{
-        //       //    this._allControlsMenuItem = itemGroup;
-        //       //}
-        //       //else if (group.UniqueId == "NewControls")
-        //       //{
-        //       //    this._newControlsMenuItem = itemGroup;
-        //       //}
-        //   
-        //
-        //   // Move "What's New" and "All Controls" to the top of the NavigationView
-        //   NavigationViewControl.MenuItems.Remove(_allControlsMenuItem);
-        //   NavigationViewControl.MenuItems.Remove(_newControlsMenuItem);
-        //   NavigationViewControl.MenuItems.Insert(0, _allControlsMenuItem);
-        //   NavigationViewControl.MenuItems.Insert(0, _newControlsMenuItem);
-        //
-        //   // Separate the All/New items from the rest of the categories.
-        //   NavigationViewControl.MenuItems.Insert(2, new Microsoft.UI.Xaml.Controls.NavigationViewItemSeparator());
-        //
-        //   //_newControlsMenuItem.Loaded += OnNewControlsMenuItemLoaded;
+            // you can also add items in code behind
+            NavigationView.MenuItems.Add(new muxc.NavigationViewItem() { Content = "Home", Icon = new SymbolIcon(Symbol.Home), Tag = "home" });
+            NavigationView.MenuItems.Add(new muxc.NavigationViewItemSeparator());
+            NavigationView.MenuItems.Add(new muxc.NavigationViewItem() { Content = "App", Icon = new SymbolIcon(Symbol.AllApps), Tag = "app" });
+
+            // set the initial SelectedItem 
+            foreach (muxc.NavigationViewItemBase item in NavigationView.MenuItems)
+            {
+                if (item is muxc.NavigationViewItem && item.Tag.ToString() == "home")
+                {
+                    NavView_Navigate((muxc.NavigationViewItem)item);
+                    NavigationView.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void OnMenuFlyoutItemClick(object sender, RoutedEventArgs e)
@@ -295,64 +278,23 @@ namespace Quester
             // Close any open teaching tips before navigation
             CloseTeachingTips();
 
-            if (args.InvokedItemContainer == null || args.InvokedItemContainer.IsSelected)
+            if (args.InvokedItemContainer.IsSelected)
             {
                 // Clicked on an item that is already selected,
                 // Avoid navigating to the same page again causing movement.
                 return;
             }
-            
+
             if (args.IsSettingsInvoked)
             {
-                if (rootFrame.CurrentSourcePageType != typeof(SettingsPage))
-                {
-                    PageHeader.Title = "Settings";
-                    rootFrame.Navigate(typeof(ProjectSelector));
-                }
+                PageHeader.Title = "Settings";
+                rootFrame.Navigate(typeof(SettingsPage));
             }
             else
             {
-                switch(args.InvokedItemContainer.Tag)
-                {
-                    case "home":
-                        PageHeader.Title = "Project Selector";
-                        rootFrame.Navigate(typeof(ProjectSelector));
-                        break;
-
-                }
-                //var invokedItem = args.InvokedItemContainer;
-                //
-                //if (invokedItem == _allControlsMenuItem)
-                //{
-                //    if (rootFrame.CurrentSourcePageType != typeof(ProjectSelector))
-                //    
-                //    {
-                //        PageHeader.Title = "Project Selector";
-                //        rootFrame.Navigate(typeof(ProjectSelector));
-                //    }
-                //}
-
-                //else if (invokedItem == _newControlsMenuItem)
-                //{
-                //    if (rootFrame.CurrentSourcePageType != typeof(NewControlsPage))
-                //    {
-                //        rootFrame.Navigate(typeof(NewControlsPage));
-                //    }
-                //}
-                //else
-                //{
-                //    if (invokedItem.DataContext is ControlInfoDataGroup)
-                //    {
-                //        var itemId = ((ControlInfoDataGroup)invokedItem.DataContext).UniqueId;
-                //        rootFrame.Navigate(typeof(SectionPage), itemId);
-                //    }
-                //    else if (invokedItem.DataContext is ControlInfoDataItem)
-                //    {
-                //        var item = (ControlInfoDataItem)invokedItem.DataContext;
-                //        rootFrame.Navigate(typeof(ItemPage), item.UniqueId);
-                //    }
-                //
-                //}
+                // find NavigationViewItem with Content that equals InvokedItem
+                var item = sender.MenuItems.OfType<muxc.NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
+                NavView_Navigate(item as muxc.NavigationViewItem);
             }
         }
 
@@ -370,6 +312,23 @@ namespace Quester
             //{
             //    NavigationViewControl.AlwaysShowHeader = true;
             //}
+
+            switch (rootFrame.CurrentSourcePageType.Name)
+            {
+                case "ProjectSelector":
+                    PageHeader.Title = "Select or Create Project";
+                    break;
+                case "NewProjectPage":
+                    PageHeader.Title = "New Project";
+                    break;
+                case "SettingsPage":
+                    PageHeader.Title = "Settings";
+                    break;
+            }
+
+
+            //if (LastNavSelectedItem != null)
+                //NavigationView.SelectedItem = LastNavSelectedItem;
         }
         private void CloseTeachingTips()
         {
@@ -580,9 +539,37 @@ namespace Quester
             controlsSearchBox.Focus(FocusState.Programmatic);
         }
 
+        private void NavView_Navigate(muxc.NavigationViewItem item)
+        {
+            switch (item.Tag)
+            {
+                case "home":
+                    PageHeader.Title = "Select or Create Project";
+                    rootFrame.Navigate(typeof(ProjectSelector));
+                    break;
+
+                case "app":
+                    PageHeader.Title = "New Project";
+                    rootFrame.Navigate(typeof(NewProjectPage));
+                    break;
+            }
+        }
+
+        private void NavigationViewControl_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)
+        {
+            if (rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+               
+
+                //NavigationView.SelectedItem = HomeTab;
+                //sender.Han
+            }
+        }
+
         public void NavigateTo(PageType pageType)
         {
-            switch(pageType)
+            switch (pageType)
             {
                 case PageType.NewProject:
                     PageHeader.Title = "New Project";

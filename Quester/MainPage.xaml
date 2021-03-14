@@ -68,6 +68,7 @@
             HeaderTemplate="{StaticResource NavigationViewHeaderTemplate}"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
+            BackRequested="NavigationViewControl_BackRequested"
             PaneOpening="NavigationViewControl_PaneOpened"
             PaneClosing="NavigationViewControl_PaneClosing"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
@@ -89,24 +90,6 @@
                     </AutoSuggestBox.KeyboardAccelerators>
                 </AutoSuggestBox>
             </muxc:NavigationView.AutoSuggestBox>
-
-            <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Tag="home" Icon="Home" Content="Home" IsSelected="True"/>
-                <muxc:NavigationViewItemSeparator/>
-                <muxc:NavigationViewItemHeader x:Name="MainPagesHeader"
-                                           Content="Main pages"/>
-                <muxc:NavigationViewItem Tag="apps" Content="Apps">
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Tag="games" Content="Games">
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7FC;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Tag="music" Icon="Audio" Content="Music"/>
-            </muxc:NavigationView.MenuItems>
 
             <Frame x:Name="rootFrame" Background="Transparent" Navigated="OnRootFrameNavigated" />
         </muxc:NavigationView>
