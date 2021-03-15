@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,6 +23,19 @@ namespace Quester.Controls
         public NewProjectControl()
         {
             this.InitializeComponent();
+            this.DataContext = new ViewModels.NewProjectViewModel();
+        }
+
+        private void ProjectNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var binding = ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
+            binding.UpdateSource();
+        }
+
+        private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            string pName = ((ViewModels.NewProjectViewModel)this.DataContext).ProjectName;
+            Debug.WriteLine("ProjectName = " + pName);
         }
     }
 }
