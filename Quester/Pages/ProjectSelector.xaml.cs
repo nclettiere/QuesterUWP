@@ -3,6 +3,7 @@ using Quester.Data;
 using Quester.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -49,6 +50,13 @@ namespace Quester.Pages
         private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
         {
             Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
+        }
+
+        private void NewProjectControl_OnFolderSubmit(object sender, Controls.NewProjectArgs pArgs)
+        {
+            Debug.WriteLine("Project Data: " + pArgs.Data.ToString());
+            NewProjectFlyout.ShowAt(CreateProjectButton);
+            NewProjectCtrl.ProjectPath = pArgs.Data.ProjectPath;
         }
     }
 }

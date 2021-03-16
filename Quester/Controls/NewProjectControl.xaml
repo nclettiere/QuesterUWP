@@ -4,19 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Quester.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
 
     <StackPanel Width="320">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Project Name</TextBlock>
+<<<<<<< HEAD
+            <TextBox x:Name="ProjectNameTextBox" Text="{Binding ProjectName, Mode=TwoWay}" TextChanged="ProjectNameTextBox_TextChanged" HorizontalAlignment="Stretch" PlaceholderText="Enter Name" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox"/>
+=======
             <TextBox x:Name="ProjectNameTextBox" Text="{Binding ProjectName, Mode=TwoWay}" TextChanged="ProjectNameTextBox_TextChanged"  HorizontalAlignment="Stretch" PlaceholderText="Enter Name" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox"/>
+>>>>>>> ab39137e503e6132967c355f3d40b332f7232d95
         </StackPanel>
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" Margin="0,10,0,0">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Project Path</TextBlock>
-            <TextBox HorizontalAlignment="Stretch" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox"/>
+            <Grid CornerRadius="0,0,0,0">
+                <TextBox Text="{Binding ProjectPath, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox" VerticalAlignment="Center" CornerRadius="2,0,0,2" Height="32"/>
+                <Button x:Name="SelectPathButton" Click="SelectPathButton_Click" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" CornerRadius="0,3,3,0" Height="32" BorderBrush="#99FFFFFF">
+                    <SymbolIcon Symbol="More" />
+                    <Button.RenderTransform>
+                        <TranslateTransform Y="0" X="-1" />
+                    </Button.RenderTransform>
+                </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+            </Grid>
         </StackPanel>
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" Margin="0,10,0,0">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Short Description (Optional)</TextBlock>
@@ -25,6 +38,10 @@
                 Height="100" Margin="0,10,0,0"/>
         </StackPanel>
 
+<<<<<<< HEAD
+        <Button x:Name="CreateProjectButton" IsEnabled="False" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
+=======
         <Button x:Name="CreateProjectButton" Click="CreateProjectButton_Click" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
+>>>>>>> ab39137e503e6132967c355f3d40b332f7232d95
     </StackPanel>
 </UserControl>

@@ -76,8 +76,8 @@
                 <SymbolIcon Symbol="Add"/>
 
                 <Button.Flyout>
-                    <Flyout Placement="RightEdgeAlignedTop">
-                        <qControl:NewProjectControl />
+                    <Flyout x:Name="NewProjectFlyout" Placement="RightEdgeAlignedTop" >
+                        <qControl:NewProjectControl x:Name="NewProjectCtrl" OnFolderSubmit="NewProjectControl_OnFolderSubmit" />
                     </Flyout>
                 </Button.Flyout>
 
