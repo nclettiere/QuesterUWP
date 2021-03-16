@@ -119,10 +119,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ControlProperties.cs" />
     <Compile Include="Controls\NewProjectControl.xaml.cs">
       <DependentUpon>NewProjectControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\ProjectButtonData.cs" />
+    <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="Helper\NavigationOrientationHelper.cs" />
     <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="MainPage.xaml.cs">

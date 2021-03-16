@@ -68,7 +68,6 @@ namespace Quester.Controls
         public NewProjectControl()
         {
             this.InitializeComponent();
-<<<<<<< HEAD
             this.DataContext = this;
         }
 
@@ -99,21 +98,6 @@ namespace Quester.Controls
         private void ProjectNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ProjectPath = IOHelper.GetDefaultProjectDir();
-=======
-            this.DataContext = new ViewModels.NewProjectViewModel();
-        }
-
-        private void ProjectNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var binding = ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
-            binding.UpdateSource();
-        }
-
-        private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
-        {
-            string pName = ((ViewModels.NewProjectViewModel)this.DataContext).ProjectName;
-            Debug.WriteLine("ProjectName = " + pName);
->>>>>>> ab39137e503e6132967c355f3d40b332f7232d95
         }
     }
 }

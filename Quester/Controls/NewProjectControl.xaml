@@ -9,11 +9,7 @@
     <StackPanel Width="320">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Project Name</TextBlock>
-<<<<<<< HEAD
             <TextBox x:Name="ProjectNameTextBox" Text="{Binding ProjectName, Mode=TwoWay}" TextChanged="ProjectNameTextBox_TextChanged" HorizontalAlignment="Stretch" PlaceholderText="Enter Name" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox"/>
-=======
-            <TextBox x:Name="ProjectNameTextBox" Text="{Binding ProjectName, Mode=TwoWay}" TextChanged="ProjectNameTextBox_TextChanged"  HorizontalAlignment="Stretch" PlaceholderText="Enter Name" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox"/>
->>>>>>> ab39137e503e6132967c355f3d40b332f7232d95
         </StackPanel>
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" Margin="0,10,0,0">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Project Path</TextBlock>
@@ -38,10 +34,6 @@
                 Height="100" Margin="0,10,0,0"/>
         </StackPanel>
 
-<<<<<<< HEAD
         <Button x:Name="CreateProjectButton" IsEnabled="False" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
-=======
-        <Button x:Name="CreateProjectButton" Click="CreateProjectButton_Click" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
->>>>>>> ab39137e503e6132967c355f3d40b332f7232d95
     </StackPanel>
 </UserControl>
