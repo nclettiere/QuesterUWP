@@ -38,7 +38,7 @@ namespace Quester.Helper
             if (!String.IsNullOrEmpty(projectName) && !String.IsNullOrEmpty(customPath))
                 return Path.Combine(customPath, projectName);
 
-            return "";
+            return customPath;
         }
     }
 }

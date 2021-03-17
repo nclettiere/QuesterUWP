@@ -14,7 +14,7 @@
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical" Margin="0,10,0,0">
             <TextBlock TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">Project Path</TextBlock>
             <Grid CornerRadius="0,0,0,0">
-                <TextBox Text="{Binding ProjectPath, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox" VerticalAlignment="Center" CornerRadius="2,0,0,2" Height="32"/>
+                <TextBox x:Name="ProjectPathTextbox" Text="{Binding ProjectPath, Mode=TwoWay}" TextChanged="ProjectPathTextbox_TextChanged"  Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,10,0,0" AutomationProperties.Name="simple TextBox" VerticalAlignment="Center" CornerRadius="2,0,0,2" Height="32"/>
                 <Button x:Name="SelectPathButton" Click="SelectPathButton_Click" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" CornerRadius="0,3,3,0" Height="32" BorderBrush="#99FFFFFF">
                     <SymbolIcon Symbol="More" />
                     <Button.RenderTransform>
@@ -34,6 +34,6 @@
                 Height="100" Margin="0,10,0,0"/>
         </StackPanel>
 
-        <Button x:Name="CreateProjectButton" IsEnabled="False" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
+        <Button x:Name="CreateProjectButton" Click="CreateProjectButton_Click" IsEnabled="False" Margin="0,15,0,0" HorizontalAlignment="Stretch" Style="{StaticResource PrimaryButton}">Create Project</Button>
     </StackPanel>
 </UserControl>

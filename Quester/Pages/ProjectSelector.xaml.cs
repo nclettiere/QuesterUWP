@@ -56,6 +56,7 @@ namespace Quester.Pages
         {
             Debug.WriteLine("Project Data: " + pArgs.Data.ToString());
             NewProjectFlyout.ShowAt(CreateProjectButton);
+            NewProjectCtrl.CustomPathEntered = true;
             NewProjectCtrl.ProjectPath = pArgs.Data.ProjectPath;
         }
     }

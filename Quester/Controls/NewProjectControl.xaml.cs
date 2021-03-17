@@ -25,6 +25,18 @@ namespace Quester.Controls
         public static readonly DependencyProperty ProjectNameProperty = DependencyProperty.Register("ProjectName", typeof(string), typeof(NewProjectControl), null);
         public static readonly DependencyProperty ProjectPathProperty = DependencyProperty.Register("ProjectPath", typeof(string), typeof(NewProjectControl), null);
 
+        private string LastProjectNameText { get; set; }
+        private bool customPathEntered;
+
+        public bool CustomPathEntered
+        {
+            get { return customPathEntered; }
+            set
+            {
+                customPathEntered = value;
+            }
+        }
+
         public string ProjectName
         {
             get { return (string)GetValue(ProjectNameProperty); }
@@ -38,30 +50,24 @@ namespace Quester.Controls
             get { return (string)GetValue(ProjectPathProperty); }
             set {
                 string path = IOHelper.FormatProjectPath(ProjectNameTextBox.Text, value);
-                SetValue(ProjectPathProperty, path); 
+                SetValue(ProjectPathProperty, path);
             }
         }
 
         private NewProjectData projectData;
 
         // The delegate procedure we are assigning to our object
-        public delegate void ShipmentHandler(object sender, NewProjectArgs pArgs);
+        public delegate void NewProjectHandler(object sender, NewProjectArgs pArgs);
 
-        public event ShipmentHandler OnFolderSubmit;
+        public event NewProjectHandler OnFolderSubmit;
 
         public NewProjectData ProjectData
         {
             set
             {
                 projectData = value;
-
-                // We need to check whether a tracking number 
-                // was assigned to the field.
-                NewProjectArgs myArgs = new NewProjectArgs(projectData);
-
-                // Tracking number is available, raise the event.
-                OnFolderSubmit(this, myArgs);
-                
+                NewProjectArgs pArgs = new NewProjectArgs(projectData);
+                OnFolderSubmit(this, pArgs);
             }
         }
 
@@ -69,6 +75,14 @@ namespace Quester.Controls
         {
             this.InitializeComponent();
             this.DataContext = this;
+        }
+
+        // Checks if project creation is available 
+        private void CheckCreateProject()
+        {
+            CreateProjectButton.IsEnabled =
+                (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text) || 
+                String.IsNullOrWhiteSpace(ProjectPathTextbox.Text)) ? false : true;
         }
 
         private async void SelectPathButton_Click(object sender, RoutedEventArgs e)
@@ -97,7 +111,24 @@ namespace Quester.Controls
 
         private void ProjectNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ProjectPath = IOHelper.GetDefaultProjectDir();
+            if (String.IsNullOrEmpty(ProjectPathTextbox.Text))
+                CustomPathEntered = false;
+
+            if (!CustomPathEntered)
+                ProjectPath = IOHelper.GetDefaultProjectDir();
+            CheckCreateProject();
+
+            LastProjectNameText = ProjectNameTextBox.Text;
+        }
+
+        private void ProjectPathTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckCreateProject();
+        }
+
+        private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
