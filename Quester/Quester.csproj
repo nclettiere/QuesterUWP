@@ -123,18 +123,17 @@
     <Compile Include="Controls\NewProjectControl.xaml.cs">
       <DependentUpon>NewProjectControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Project.cs" />
     <Compile Include="Data\ProjectButtonData.cs" />
     <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="Helper\NavigationOrientationHelper.cs" />
+    <Compile Include="Helper\ProjectHelper.cs" />
     <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PageHeader.xaml.cs">
       <DependentUpon>PageHeader.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\NewProjectPage.xaml.cs">
-      <DependentUpon>NewProjectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ProjectSelector.xaml.cs">
       <DependentUpon>ProjectSelector.xaml</DependentUpon>
@@ -177,10 +176,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\NewProjectPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\ProjectSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -197,14 +192,24 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>7.0.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.6.0-prerelease.210227001</Version>
     </PackageReference>
     <PackageReference Include="MvvmLightLibs">
       <Version>5.4.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1-beta1</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Assets\template_default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

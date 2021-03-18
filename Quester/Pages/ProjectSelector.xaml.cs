@@ -28,7 +28,6 @@ namespace Quester.Pages
     {
        
         List<ProjectButtonData> ButtonsData;
-        
 
         public ProjectSelector()
         {
@@ -58,6 +57,12 @@ namespace Quester.Pages
             NewProjectFlyout.ShowAt(CreateProjectButton);
             NewProjectCtrl.CustomPathEntered = true;
             NewProjectCtrl.ProjectPath = pArgs.Data.ProjectPath;
+        }
+
+        private void NewProjectFlyout_Closed(object sender, object e)
+        {
+            if(!NewProjectCtrl.CustomPathEntered)
+                NewProjectCtrl.ClearAll();
         }
     }
 }

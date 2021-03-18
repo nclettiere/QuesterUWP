@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quester.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,20 +8,6 @@ using Windows.UI.Xaml;
 
 namespace Quester.Controls
 {
-    public struct NewProjectData
-    {
-        public NewProjectData(string projectName, string projectPath)
-        {
-            ProjectName = projectName;
-            ProjectPath = projectPath;
-        }
-
-        public string ProjectName { get; }
-        public string ProjectPath { get; }
-
-        public override string ToString() => $"projectName({ProjectName}), projectPath({ProjectPath})";
-    }
-
     public class NewProjectArgs : EventArgs
     {
         private NewProjectData data;

@@ -548,10 +548,10 @@ namespace Quester
                     rootFrame.Navigate(typeof(ProjectSelector));
                     break;
 
-                case "app":
-                    PageHeader.Title = "New Project";
-                    rootFrame.Navigate(typeof(NewProjectPage));
-                    break;
+            //    case "app":
+            //        PageHeader.Title = "New Project";
+            //        rootFrame.Navigate(typeof(NewProjectPage));
+            //        break;
             }
         }
 
@@ -569,13 +569,13 @@ namespace Quester
 
         public void NavigateTo(PageType pageType)
         {
-            switch (pageType)
-            {
-                case PageType.NewProject:
-                    PageHeader.Title = "New Project";
-                    rootFrame.Navigate(typeof(NewProjectPage));
-                    break;
-            }
+            //switch (pageType)
+            //{
+            //    case PageType.NewProject:
+            //        PageHeader.Title = "New Project";
+            //        rootFrame.Navigate(typeof(NewProjectPage));
+            //        break;
+            //}
         }
     }
 

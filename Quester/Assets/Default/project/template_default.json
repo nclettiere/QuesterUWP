@@ -1,6 +1,7 @@
 {
 	project: "",
 	project_path: "",
+	project_description: "",
 	quester_version: "1.45",
 	
 	engines: [],

@@ -26,8 +26,8 @@ namespace Quester.Controls
         public static readonly DependencyProperty ProjectNameProperty = DependencyProperty.Register("ProjectName", typeof(string), typeof(NewProjectControl), null);
         public static readonly DependencyProperty ProjectPathProperty = DependencyProperty.Register("ProjectPath", typeof(string), typeof(NewProjectControl), null);
 
-        private string LastProjectNameText { get; set; }
         private bool customPathEntered;
+        private bool loadingStateEnabled;
 
         public bool CustomPathEntered
         {
@@ -35,6 +35,23 @@ namespace Quester.Controls
             set
             {
                 customPathEntered = value;
+            }
+        }
+
+        public bool LoadingStateEnabled
+        {
+            get { return loadingStateEnabled; }
+            set
+            {
+                loadingStateEnabled = value;
+
+                CreateProjectButton.IsEnabled = !value;
+                ProjectNameTextBox.IsEnabled = !value;
+                ProjectPathTextbox.IsEnabled = !value;
+                ProjectDescRTB.IsEnabled = !value;
+                SelectPathButton.IsEnabled = !value;
+                ProjectProgressBar.IsActive = value;
+                LoadingPhase.Visibility = !value ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
@@ -72,6 +89,17 @@ namespace Quester.Controls
             }
         }
 
+        internal void ClearAll()
+        {
+            ProjectName = String.Empty;
+            ProjectPath = String.Empty;
+            ProjectDescRTB.Document.SetText(Windows.UI.Text.TextSetOptions.ApplyRtfDocumentDefaults, String.Empty);
+            CreateProjectButton.IsEnabled = false;
+            customPathEntered = false;
+
+            LoadingStateEnabled = false;
+        }
+
         public NewProjectControl()
         {
             this.InitializeComponent();
@@ -79,7 +107,7 @@ namespace Quester.Controls
         }
 
         // Checks if project creation is available 
-        private void CheckCreateProject()
+        private bool CheckCreateProject()
         {
             bool validTexts =
             (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text) || 
@@ -88,6 +116,8 @@ namespace Quester.Controls
             bool projectAvailable = IOHelper.IsProjectAvailable(ProjectPathTextbox.Text);
 
             CreateProjectButton.IsEnabled = validTexts && projectAvailable;
+
+            return (validTexts && projectAvailable);
         }
 
         private async void SelectPathButton_Click(object sender, RoutedEventArgs e)
@@ -116,14 +146,22 @@ namespace Quester.Controls
 
         private void ProjectNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (String.IsNullOrEmpty(ProjectPathTextbox.Text))
+            if (!String.IsNullOrWhiteSpace(ProjectNameTextBox.Text)) // This will prevent exception when textbox is empty   
+            {
+                if (!Regex.IsMatch(ProjectNameTextBox.Text, "^[a-zA-Z]+$"))
+                {
+                    ProjectNameTextBox.Text = ProjectNameTextBox.Text.Remove(ProjectNameTextBox.Text.Length - 1);
+                    ProjectNameTextBox.Focus(FocusState.Keyboard);
+                    ProjectNameTextBox.Select(ProjectNameTextBox.Text.Length, 0);
+                }
+            }else
+            {
                 CustomPathEntered = false;
+            }
 
             if (!CustomPathEntered)
                 ProjectPath = IOHelper.GetDefaultProjectDir();
             CheckCreateProject();
-
-            LastProjectNameText = ProjectNameTextBox.Text;
         }
 
         private void ProjectPathTextbox_TextChanged(object sender, TextChangedEventArgs e)
@@ -133,16 +171,17 @@ namespace Quester.Controls
 
         private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void ProjectNameTextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
-        {
-            if (!Regex.IsMatch(sender.Text, @"^-?\d+\.?\d+[-+*\/]-?\d+\.?\d+$") && sender.Text != "")
+            if(CheckCreateProject())
             {
-                int position = sender.SelectionStart - 1;
-                sender.Text = sender.Text.Remove(position, 1);
-                sender.SelectionStart = position;
+                LoadingStateEnabled = true;
+
+                string desc = String.Empty;
+
+                ProjectDescRTB.TextDocument.GetText(Windows.UI.Text.TextGetOptions.None, out desc);
+
+                NewProjectData pData = new NewProjectData(ProjectName, ProjectPath, desc);
+
+                ProjectHelper.CreateNewProject(this, pData);
             }
         }
     }
