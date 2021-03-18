@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Quester.Helper
 {
@@ -22,7 +23,8 @@ namespace Quester.Helper
 
         public static string GetDefaultProjectDir()
         {
-            string exe = Path.Combine(GetUserHomeDir(), "QuesterProjects");
+            string exe = Path.Combine(
+                ApplicationData.Current.LocalFolder.Path, "QuesterProjects");
             return exe;
         }
 
@@ -39,6 +41,17 @@ namespace Quester.Helper
                 return Path.Combine(customPath, projectName);
 
             return customPath;
+        }
+
+        // Default projects dir
+        public static bool IsProjectAvailable(string projectDir)
+        {
+            if (!String.IsNullOrWhiteSpace(projectDir))
+            {
+                return !Directory.Exists(projectDir);
+            }
+
+            return false;
         }
     }
 }

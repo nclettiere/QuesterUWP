@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using Quester.Helper;
+using System.Text.RegularExpressions;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -80,9 +81,13 @@ namespace Quester.Controls
         // Checks if project creation is available 
         private void CheckCreateProject()
         {
-            CreateProjectButton.IsEnabled =
-                (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text) || 
+            bool validTexts =
+            (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text) || 
                 String.IsNullOrWhiteSpace(ProjectPathTextbox.Text)) ? false : true;
+
+            bool projectAvailable = IOHelper.IsProjectAvailable(ProjectPathTextbox.Text);
+
+            CreateProjectButton.IsEnabled = validTexts && projectAvailable;
         }
 
         private async void SelectPathButton_Click(object sender, RoutedEventArgs e)
@@ -129,6 +134,16 @@ namespace Quester.Controls
         private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void ProjectNameTextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            if (!Regex.IsMatch(sender.Text, @"^-?\d+\.?\d+[-+*\/]-?\d+\.?\d+$") && sender.Text != "")
+            {
+                int position = sender.SelectionStart - 1;
+                sender.Text = sender.Text.Remove(position, 1);
+                sender.SelectionStart = position;
+            }
         }
     }
 }
