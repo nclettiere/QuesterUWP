@@ -51,17 +51,17 @@ namespace Quester.Helper
             return true;
         }
 
-        public static bool SerializeProjectJSON(in Project project) 
+        public async static Task<bool> SerializeProjectJSON(Project project) 
         {
             try
             {
-                using (StreamWriter file = File.CreateText(project.ProjectPath))
+                bool FileSuccess = await IOHelper.CreateFile(project.ProjectPath);
+                if(FileSuccess)
                 {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Formatting = Formatting.Indented;
-                    serializer.Serialize(file, project);
+                    File.WriteAllText(project.ProjectPath, JsonConvert.SerializeObject(project, Formatting.Indented));
                 }
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
                 return false;

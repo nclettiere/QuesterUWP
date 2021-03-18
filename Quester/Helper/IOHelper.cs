@@ -53,5 +53,32 @@ namespace Quester.Helper
 
             return false;
         }
+
+        public async static void EnsureProjectStructure()
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            
+            StorageFolder folder = await storageFolder.CreateFolderAsync("QuesterProject",
+                CreationCollisionOption.OpenIfExists);
+        }
+
+        public async static Task<bool> CreateFile(string path)
+        {
+            EnsureProjectStructure();
+
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+            try
+            {
+                StorageFile file = await storageFolder.CreateFileAsync(path, CreationCollisionOption.FailIfExists);
+            }
+            catch (Exception e)
+            {
+                // Folder exist
+                return false;
+            }
+
+            return true;
+        }
     }
 }
