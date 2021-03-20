@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -23,9 +24,21 @@ namespace Quester.Helper
 
         public static string GetDefaultProjectDir()
         {
-            string exe = Path.Combine(
-                ApplicationData.Current.LocalFolder.Path, "QuesterProjects");
-            return exe;
+            string combinedPath = Path.Combine(
+                ApplicationData.Current.LocalFolder.Path, "Projects");
+
+            return combinedPath;
+
+        }
+
+        public static async Task<StorageFolder> GetProjectsFolder()
+        {
+            string combinedPath = Path.Combine(
+                ApplicationData.Current.LocalFolder.Path, "Projects");
+
+            EnsureProjectStructure();
+
+            return await StorageFolder.GetFolderFromPathAsync(combinedPath);
         }
 
         public static string FormatProjectPath(string projectName)
@@ -58,11 +71,31 @@ namespace Quester.Helper
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             
-            StorageFolder folder = await storageFolder.CreateFolderAsync("QuesterProject",
+            StorageFolder folder = await storageFolder.CreateFolderAsync("Projects",
                 CreationCollisionOption.OpenIfExists);
         }
 
-        public async static Task<bool> CreateFile(string path)
+        public async static Task<StorageFile> CreateFile(string folderPath, string filename)
+        {
+            EnsureProjectStructure();
+
+            //StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+            try
+            {
+                StorageFolder sf = await StorageFolder.GetFolderFromPathAsync(folderPath);
+                StorageFile file = await sf.CreateFileAsync(filename, CreationCollisionOption.FailIfExists);
+                return file;
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
+
+        }
+
+        public async static Task<StorageFolder> CreateFolder(string path)
         {
             EnsureProjectStructure();
 
@@ -70,7 +103,24 @@ namespace Quester.Helper
 
             try
             {
-                StorageFile file = await storageFolder.CreateFileAsync(path, CreationCollisionOption.FailIfExists);
+                StorageFolder createdFolder = await storageFolder.CreateFolderAsync(path, CreationCollisionOption.FailIfExists);
+                return createdFolder;
+            }
+            catch (Exception e)
+            {
+                // Folder exist
+                return null;
+            }
+        }
+
+        public async static Task<bool> CreateFolder(StorageFolder folder, string path)
+        {
+            EnsureProjectStructure();
+
+            try
+            {
+                Debug.WriteLine(folder.Path);
+                StorageFolder createdFolder = await folder.CreateFolderAsync(path, CreationCollisionOption.FailIfExists);
             }
             catch (Exception e)
             {

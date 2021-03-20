@@ -64,5 +64,20 @@ namespace Quester.Pages
             if(!NewProjectCtrl.CustomPathEntered)
                 NewProjectCtrl.ClearAll();
         }
+
+        private void NewProjectFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+        {
+           
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            NewProjectCtrl.parent = this;
+        }
+
+        internal void CloseNewProjectFlyout()
+        {
+            NewProjectFlyout.Hide();
+        }
     }
 }

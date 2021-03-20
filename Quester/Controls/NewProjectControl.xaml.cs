@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 
 using Quester.Helper;
 using System.Text.RegularExpressions;
+using Quester.Pages;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,6 +26,8 @@ namespace Quester.Controls
     {
         public static readonly DependencyProperty ProjectNameProperty = DependencyProperty.Register("ProjectName", typeof(string), typeof(NewProjectControl), null);
         public static readonly DependencyProperty ProjectPathProperty = DependencyProperty.Register("ProjectPath", typeof(string), typeof(NewProjectControl), null);
+
+        internal ProjectSelector parent;
 
         private bool customPathEntered;
         private bool loadingStateEnabled;
@@ -45,7 +48,7 @@ namespace Quester.Controls
             {
                 loadingStateEnabled = value;
 
-                CreateProjectButton.IsEnabled = !value;
+                CreateProjectButton.IsEnabled = false;
                 ProjectNameTextBox.IsEnabled = !value;
                 ProjectPathTextbox.IsEnabled = !value;
                 ProjectDescRTB.IsEnabled = !value;
@@ -67,8 +70,7 @@ namespace Quester.Controls
         {
             get { return (string)GetValue(ProjectPathProperty); }
             set {
-                string path = IOHelper.FormatProjectPath(ProjectNameTextBox.Text, value);
-                SetValue(ProjectPathProperty, path);
+                SetValue(ProjectPathProperty, value);
             }
         }
 
@@ -96,7 +98,7 @@ namespace Quester.Controls
             ProjectDescRTB.Document.SetText(Windows.UI.Text.TextSetOptions.ApplyRtfDocumentDefaults, String.Empty);
             CreateProjectButton.IsEnabled = false;
             customPathEntered = false;
-
+            DefaultLocationSwitch.IsOn = true;
             LoadingStateEnabled = false;
         }
 
@@ -110,14 +112,32 @@ namespace Quester.Controls
         private bool CheckCreateProject()
         {
             bool validTexts =
-            (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text) || 
-                String.IsNullOrWhiteSpace(ProjectPathTextbox.Text)) ? false : true;
+            (String.IsNullOrWhiteSpace(ProjectNameTextBox.Text)) ? false : true;
 
-            bool projectAvailable = IOHelper.IsProjectAvailable(ProjectPathTextbox.Text);
+            //bool projectAvailable = IOHelper.IsProjectAvailable(ProjectPathTextbox.Text);
 
-            CreateProjectButton.IsEnabled = validTexts && projectAvailable;
+            CreateProjectButton.IsEnabled = validTexts;
 
-            return (validTexts && projectAvailable);
+            return (validTexts);
+        }
+
+        private bool? SetPathOnToggleChange()
+        {
+            if (SelectPathButton != null && DefaultLocationSwitch != null)
+            {
+                bool toggleValue = DefaultLocationSwitch.IsOn;
+
+                SelectPathButton.IsEnabled = !toggleValue;
+
+                if (toggleValue)
+                {
+                    ProjectPath = IOHelper.GetDefaultProjectDir();
+                }
+
+                return toggleValue;
+            }
+
+            return null;
         }
 
         private async void SelectPathButton_Click(object sender, RoutedEventArgs e)
@@ -156,11 +176,11 @@ namespace Quester.Controls
                 }
             }else
             {
-                CustomPathEntered = false;
+                //CustomPathEntered = false;
             }
 
-            if (!CustomPathEntered)
-                ProjectPath = IOHelper.GetDefaultProjectDir();
+            //if (!CustomPathEntered)
+            //    ProjectPath = IOHelper.GetDefaultProjectDir();
             CheckCreateProject();
         }
 
@@ -169,7 +189,7 @@ namespace Quester.Controls
             CheckCreateProject();
         }
 
-        private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
+        private async void CreateProjectButton_Click(object sender, RoutedEventArgs e)
         {
             if(CheckCreateProject())
             {
@@ -181,8 +201,23 @@ namespace Quester.Controls
 
                 NewProjectData pData = new NewProjectData(ProjectName, ProjectPath, desc);
 
-                ProjectHelper.CreateNewProject(this, pData);
+                bool success = await ProjectHelper.CreateNewProject(this, pData);
+
+                if(success)
+                {
+                    parent.CloseNewProjectFlyout();
+                }
             }
+        }
+
+        private void DefaultLocationSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            SetPathOnToggleChange();
+        }
+
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SetPathOnToggleChange();
         }
     }
 }

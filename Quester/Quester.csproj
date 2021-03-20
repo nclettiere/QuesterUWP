@@ -123,6 +123,7 @@
     <Compile Include="Controls\NewProjectControl.xaml.cs">
       <DependentUpon>NewProjectControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ValueConverters.cs" />
     <Compile Include="Data\Project.cs" />
     <Compile Include="Data\ProjectButtonData.cs" />
     <Compile Include="Helper\IOHelper.cs" />

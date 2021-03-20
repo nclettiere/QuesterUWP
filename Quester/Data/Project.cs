@@ -1,6 +1,7 @@
 ﻿using Quester.Helper;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,12 +43,51 @@ namespace Quester.Data
             //EnginesPath = <TODO>;
         }
 
-        internal void SaveProject()
+        internal async Task<bool> SaveProjectAsync()
         {
             if (String.IsNullOrEmpty(ProjectPath))
-                return;
+                return false;
 
-            ProjectHelper.SerializeProjectJSON(this);
+            return await ProjectHelper.SerializeProjectJSON(this);
+        }
+        internal string GetProjectFileFormated()
+        {
+            if (String.IsNullOrEmpty(ProjectPath))
+                return String.Empty;
+
+            return Path.Combine(ProjectPath, ProjectHelper.FormatProjectName(Name) + ".json");
+        }
+
+        internal string GetProjectFileName()
+        {
+            if (String.IsNullOrEmpty(ProjectPath))
+                return String.Empty;
+
+            return (ProjectHelper.FormatProjectName(Name) + ".json");
+        }
+
+        internal (string, string) GetProjectCharactersFolder()
+        {
+            if (String.IsNullOrEmpty(ProjectPath))
+                return (String.Empty, String.Empty);
+
+            return ((ProjectHelper.FormatProjectName(Name) + @"\Characters"), (ProjectHelper.FormatProjectName(Name) + @"\Characters\DB"));
+        }
+
+        internal (string, string) GetProjectDialoguesFolder()
+        {
+            if (String.IsNullOrEmpty(ProjectPath))
+                return (String.Empty, String.Empty);
+
+            return ((ProjectHelper.FormatProjectName(Name) + @"\Dialogues"), (ProjectHelper.FormatProjectName(Name) + @"\Dialogues\DB"));
+        }
+
+        internal (string, string) GetProjectQuestsFolder()
+        {
+            if (String.IsNullOrEmpty(ProjectPath))
+                return (String.Empty, String.Empty);
+
+            return ((ProjectHelper.FormatProjectName(Name) + @"\Quests"), (ProjectHelper.FormatProjectName(Name) + @"\Quests\DB"));
         }
     }
 

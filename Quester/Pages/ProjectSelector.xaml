@@ -9,7 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:Quester.ViewModels"
     xmlns:qControl="using:Quester.Controls"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Loaded="Page_Loaded">
 
     <Page.Resources>
         <DataTemplate x:Key="ImageTemplate" x:DataType="data:ProjectButtonData">
@@ -76,7 +77,7 @@
                 <SymbolIcon Symbol="Add"/>
 
                 <Button.Flyout>
-                    <Flyout x:Name="NewProjectFlyout" Placement="RightEdgeAlignedTop" Closed="NewProjectFlyout_Closed" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" >
+                    <Flyout x:Name="NewProjectFlyout" Placement="RightEdgeAlignedTop" Closing="NewProjectFlyout_Closing" Closed="NewProjectFlyout_Closed" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" >
                         <qControl:NewProjectControl x:Name="NewProjectCtrl" OnFolderSubmit="NewProjectControl_OnFolderSubmit"/>
                         
                         <Flyout.FlyoutPresenterStyle>

@@ -38,7 +38,7 @@ namespace Quester.Helper
 
     class ProjectHelper
     {
-        public static bool CreateNewProject(FrameworkElement context, NewProjectData pData)
+        public static async Task<bool> CreateNewProject(FrameworkElement context, NewProjectData pData)
         {
             Uri ProjectTemplate = new Uri(context.BaseUri, "/Assets/template_default.json");
             StorageFile DefaultFile = StorageFile.GetFileFromApplicationUriAsync(ProjectTemplate).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -46,28 +46,67 @@ namespace Quester.Helper
 
             Project NewProject = JsonConvert.DeserializeObject<Project>(Json);
             NewProject.FillNewData(pData);
-            NewProject.SaveProject();
 
-            return true;
+            return await NewProject.SaveProjectAsync();
+        }
+
+        public static string FormatProjectName(string projectName)
+        {
+            return projectName.Replace(" ", "_");
+        }
+
+        public async static Task<bool> CreateDefaultProjectFolders(Project project)
+        {
+            if (project.ProjectPath.Contains(IOHelper.GetDefaultProjectDir()))
+            {
+                var (CharactersFolder, CharactersDBFolder) = project.GetProjectCharactersFolder();
+                var (DialoguesFolder, DialoguesDBFolder) = project.GetProjectDialoguesFolder();
+                var (QuestsFolder, QuestsDBFolder) = project.GetProjectQuestsFolder();
+                StorageFolder sf = await IOHelper.GetProjectsFolder();
+                await sf.CreateFolderAsync(CharactersDBFolder, CreationCollisionOption.OpenIfExists);
+                await sf.CreateFolderAsync(DialoguesDBFolder, CreationCollisionOption.OpenIfExists);
+                await sf.CreateFolderAsync(QuestsDBFolder, CreationCollisionOption.OpenIfExists);
+                return true;
+            }else
+            {
+                /// TODO
+            }
+
+            return false;
         }
 
         public async static Task<bool> SerializeProjectJSON(Project project) 
         {
             try
             {
-                bool FileSuccess = await IOHelper.CreateFile(project.ProjectPath);
-                if(FileSuccess)
-                {
-                    File.WriteAllText(project.ProjectPath, JsonConvert.SerializeObject(project, Formatting.Indented));
+                if(project.ProjectPath.Equals(IOHelper.GetDefaultProjectDir())) {
+                    StorageFolder ProjectsFolder = await IOHelper.GetProjectsFolder();
+                    if (await IOHelper.CreateFolder(ProjectsFolder, FormatProjectName(project.Name)))
+                    {
+                        project.ProjectPath = IOHelper.FormatProjectPath(project.Name);
+
+                        string mainFileStr = project.GetProjectFileName();
+                        if (mainFileStr == String.Empty) return false;
+
+                        StorageFile ProjectMainFile = await IOHelper.CreateFile(project.ProjectPath, mainFileStr);
+                        if (ProjectMainFile == null) return false;
+
+                        await Windows.Storage.FileIO.WriteTextAsync(ProjectMainFile, JsonConvert.SerializeObject(project, Formatting.Indented));
+                        await CreateDefaultProjectFolders(project);
+
+                        return true;
+
+                    }
                 }
+
+                /// TODO
+                return false;
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
                 return false;
             }
-
-            return true;
         }
     }
 }

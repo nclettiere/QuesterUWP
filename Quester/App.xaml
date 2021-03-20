@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:muxm="using:Microsoft.UI.Xaml.Media"
     xmlns:local="using:Quester" 
+    xmlns:ctrls="using:Quester.Controls" 
     xmlns:vm="using:Quester.ViewModels"
     xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)">
 
@@ -12,6 +13,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
                 <ResourceDictionary>
+                    <ctrls:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+                    <ctrls:ProjectPathFormatConverter x:Key="ProjectFormatConverter" />
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
                             <!-- The "Default" theme dictionary is used unless a specific
