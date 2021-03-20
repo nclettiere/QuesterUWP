@@ -30,5 +30,3 @@ NOTE: The project is currently in an early stage, and its features are not imple
 - Custom attributes (like race, class, perks and more)
 - Set/Create equipment.
 - Set default dialogues.
-
-## What exactly can I do with this features?
