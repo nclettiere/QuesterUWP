@@ -1,4 +1,5 @@
-﻿using Quester.Helper;
+﻿using Newtonsoft.Json;
+using Quester.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -95,10 +96,17 @@ namespace Quester.Data
 
         public static async Task<Project> GetProjectFromJsonFile(FrameworkElement context, string pFile)
         {
-            StorageFile DefaultFile = await StorageFile.GetFileFromPathAsync(pFile);
-            string Json = FileIO.ReadTextAsync(DefaultFile).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+            try
+            {
+                StorageFile DefaultFile = await StorageFile.GetFileFromPathAsync(pFile);
+                string Json = FileIO.ReadTextAsync(DefaultFile).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
 
-            Debug.WriteLine(Json);
+                return JsonConvert.DeserializeObject<Project>(Json);
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
 
             return null;
         }

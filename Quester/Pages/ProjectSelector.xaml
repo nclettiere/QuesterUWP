@@ -13,11 +13,11 @@
     Loaded="Page_Loaded">
 
     <Page.Resources>
-        <DataTemplate x:Key="ImageTemplate" x:DataType="data:ProjectButtonData">
-            <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150"  BorderThickness="2"  Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind ProjectTooltip}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
+        <DataTemplate x:Key="ProjectButtonsTemplate" x:DataType="data:Project">
+            <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150"  BorderThickness="2"  Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind Name}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
                 <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Vertical">
-                        <TextBlock Text="{x:Bind ProjectName}" Padding="15,10,15,0"  TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind Name}" Padding="15,10,15,0"  TextTrimming="CharacterEllipsis" />
                         <muxc:NavigationViewItemSeparator />
                         <TextBlock Text="{x:Bind ProjectPath}" Foreground="{StaticResource SystemControlPageTextBaseMediumBrush}" TextTrimming="CharacterEllipsis"  Padding="15,0,15,0" />
                     </StackPanel>
@@ -98,8 +98,8 @@
         <GridView
             x:Name="BasicGridView"
             Grid.Column="1"
-            ItemsSource="{x:Bind ButtonsData}"
-            ItemTemplate="{StaticResource ImageTemplate}"
+            ItemsSource="{Binding Path=Projects}"
+            ItemTemplate="{StaticResource ProjectButtonsTemplate}"
             FlowDirection="LeftToRight">
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">

@@ -125,7 +125,7 @@ namespace Quester.Helper
                     var ProjectMain = projectFiles.Where(f => List.Any(e => e == Path.GetExtension(f.FileType)))
                               .Select(f => f.Path);
 
-                    pFiles.Append(ProjectMain.First());
+                    pFiles.Add(ProjectMain.First());
                 }
             }
 

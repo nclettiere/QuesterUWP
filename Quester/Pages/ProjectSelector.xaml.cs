@@ -29,17 +29,16 @@ namespace Quester.Pages
     {
        
         List<ProjectButtonData> ButtonsData;
+        List<Project> projects;
+
+        internal List<Project> Projects { get => projects; set => projects = value; }
 
         public ProjectSelector()
         {
             this.InitializeComponent();
+            DataContext = this;
 
-            this.DataContext = new MainViewModel();
-
-            ButtonsData = new List<ProjectButtonData>();
-            ButtonsData.Add(new ProjectButtonData("Test1", "Tooltip1", @"C:\Users\Percebe64\source\repos\QuesterUWP\Quester"));
-            ButtonsData.Add(new ProjectButtonData("Test2", "Tooltip2", @"C:\Users\Percebe64\source\repos\QuesterUWP\Quester"));
-            ButtonsData.Add(new ProjectButtonData("Test3", "Tooltip3", @"C:\Users\Percebe64\source\repos\QuesterUWP\Quester"));
+            Projects = new List<Project>();
         }
 
         private void BasicGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -74,6 +73,7 @@ namespace Quester.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             NewProjectCtrl.parent = this;
+            ReloadProjects();
         }
 
         internal void CloseNewProjectFlyout()
@@ -81,16 +81,22 @@ namespace Quester.Pages
             NewProjectFlyout.Hide();
         }
 
-        private async void ReloadProjectsButton_Click(object sender, RoutedEventArgs e)
+        internal async void ReloadProjects()
         {
             IReadOnlyList<string> projectFiles = await ProjectHelper.SearchForProjects();
 
-            List<Project> projects = new List<Project>();
+            Projects.Clear();
 
             foreach (string pFile in projectFiles)
             {
-                projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
+                Projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
             }
+
+        }
+
+        private void ReloadProjectsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadProjects();
         }
     }
 }
