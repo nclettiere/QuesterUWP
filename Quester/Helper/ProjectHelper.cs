@@ -108,5 +108,28 @@ namespace Quester.Helper
                 return false;
             }
         }
+
+        public static async Task<IReadOnlyList<string>> SearchForProjects(string customLocation = null)
+        {
+            List<string> pFiles = new List<string>();
+            if(customLocation == null)
+            {
+                StorageFolder ProjectsFolder = await IOHelper.GetProjectsFolder();
+                IReadOnlyList<StorageFolder> folderList = await ProjectsFolder.GetFoldersAsync();
+
+                int i = 0;
+                foreach (StorageFolder folder in folderList)
+                {
+                    IReadOnlyList<StorageFile> projectFiles = await folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+                    var List = new List<string>() { ".qter", ".quester", ".qtr" };
+                    var ProjectMain = projectFiles.Where(f => List.Any(e => e == Path.GetExtension(f.FileType)))
+                              .Select(f => f.Path);
+
+                    pFiles.Append(ProjectMain.First());
+                }
+            }
+
+            return pFiles;
+        }
     }
 }

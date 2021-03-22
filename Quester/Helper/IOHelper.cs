@@ -130,5 +130,15 @@ namespace Quester.Helper
 
             return true;
         }
+
+        public static string[] RecurseDirectory(string path, bool includeSubfolders = false)
+        {
+            EnsureProjectStructure();
+            SearchOption opt = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            if (!Directory.Exists(path)) return new string[0];
+
+            return Directory.GetFiles(path, "*.qter", opt);
+        }
     }
 }

@@ -61,7 +61,7 @@
 
     <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Padding="20">
 
-        <Button Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent">
+        <Button x:Name="ReloadProjectsButton" Click="ReloadProjectsButton_Click" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent">
             <StackPanel Orientation="Horizontal">
                 <FontIcon Glyph="&#xE72C;" FontSize="15" />
                 <TextBlock Text="Reload Projects" Margin="10,0,0,0"/>

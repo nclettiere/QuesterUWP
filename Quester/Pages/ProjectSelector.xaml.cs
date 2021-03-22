@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Quester.Data;
+using Quester.Helper;
 using Quester.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,18 @@ namespace Quester.Pages
         internal void CloseNewProjectFlyout()
         {
             NewProjectFlyout.Hide();
+        }
+
+        private async void ReloadProjectsButton_Click(object sender, RoutedEventArgs e)
+        {
+            IReadOnlyList<string> projectFiles = await ProjectHelper.SearchForProjects();
+
+            List<Project> projects = new List<Project>();
+
+            foreach (string pFile in projectFiles)
+            {
+                projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
+            }
         }
     }
 }

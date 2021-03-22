@@ -1,10 +1,13 @@
 ﻿using Quester.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace Quester.Data
 {
@@ -55,7 +58,7 @@ namespace Quester.Data
             if (String.IsNullOrEmpty(ProjectPath))
                 return String.Empty;
 
-            return Path.Combine(ProjectPath, ProjectHelper.FormatProjectName(Name) + ".json");
+            return Path.Combine(ProjectPath, ProjectHelper.FormatProjectName(Name) + ".qter");
         }
 
         internal string GetProjectFileName()
@@ -63,7 +66,7 @@ namespace Quester.Data
             if (String.IsNullOrEmpty(ProjectPath))
                 return String.Empty;
 
-            return (ProjectHelper.FormatProjectName(Name) + ".json");
+            return (ProjectHelper.FormatProjectName(Name) + ".qter");
         }
 
         internal (string, string) GetProjectCharactersFolder()
@@ -88,6 +91,16 @@ namespace Quester.Data
                 return (String.Empty, String.Empty);
 
             return ((ProjectHelper.FormatProjectName(Name) + @"\Quests"), (ProjectHelper.FormatProjectName(Name) + @"\Quests\DB"));
+        }
+
+        public static async Task<Project> GetProjectFromJsonFile(FrameworkElement context, string pFile)
+        {
+            StorageFile DefaultFile = await StorageFile.GetFileFromPathAsync(pFile);
+            string Json = FileIO.ReadTextAsync(DefaultFile).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+
+            Debug.WriteLine(Json);
+
+            return null;
         }
     }
 
