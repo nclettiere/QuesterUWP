@@ -569,13 +569,16 @@ namespace Quester
 
         public void NavigateTo(PageType pageType)
         {
-            //switch (pageType)
-            //{
-            //    case PageType.NewProject:
-            //        PageHeader.Title = "New Project";
-            //        rootFrame.Navigate(typeof(NewProjectPage));
-            //        break;
-            //}
+            switch (pageType)
+            {
+                case PageType.NewProject:
+                    PageHeader.Title = "Select or Create Project";
+                    //rootFrame.Navigate(typeof(ProjectSelector));
+                    muxc.NavigationViewItem item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>().First(x => (string)x.Tag == "home");
+                    NavView_Navigate(item);
+                    NavigationView.SelectedItem = item;
+                    break;
+            }
         }
     }
 

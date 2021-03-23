@@ -33,15 +33,10 @@ namespace Quester.Pages
             DataContext = new ProjectSelectorModel();
         }
 
-        private void BasicGridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
-
-        private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
-        {
-            Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
-        }
+        //private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
+        //}
 
         private void NewProjectControl_OnFolderSubmit(object sender, Controls.NewProjectArgs pArgs)
         {
@@ -54,11 +49,6 @@ namespace Quester.Pages
         {
             if(!NewProjectCtrl.CustomPathEntered)
                 NewProjectCtrl.ClearAll();
-        }
-
-        private void NewProjectFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
-        {
-           
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -83,11 +73,49 @@ namespace Quester.Pages
                 MenuFlyoutItem item = sender as MenuFlyoutItem;
                 StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync((string)item.Tag);
                 await Launcher.LaunchFolderAsync(pFolder);
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 // probably permissions issue
                 // Todo: solve file management here
             }
+        }
+
+        private async void DeleteProjectItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MenuFlyoutItem item = sender as MenuFlyoutItem;
+                StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync((string)item.Tag);
+
+                DeleteConfirmation.PrimaryButtonClick += async (s, args) =>
+                {
+                    try
+                    {
+                        await pFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        ((ProjectSelectorModel)DataContext).RetrieveAll();
+                    }
+                    catch(FileNotFoundException FileNotFoundEx)
+                    {
+                        Debug.WriteLine(FileNotFoundEx.Message);
+                    }
+                };
+
+                await DeleteConfirmation.ShowAsync(ContentDialogPlacement.Popup);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                // probably permissions issue
+                // Todo: solve file management here
+            }
+        }
+
+        private void OnProjectButtonClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: Select Project Here
         }
     }
 }

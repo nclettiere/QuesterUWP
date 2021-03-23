@@ -14,7 +14,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="ProjectButtonsTemplate" x:DataType="data:Project">
-            <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150" BorderThickness="2" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind Name}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
+            <Button Tag="{x:Bind ProjectPath}" Click="OnProjectButtonClick" Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150" BorderThickness="2" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind Name}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
                 <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Vertical">
                         <TextBlock Text="{x:Bind Name}" Padding="15,10,15,0"  TextTrimming="CharacterEllipsis" />
@@ -48,7 +48,7 @@
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Name="DeleteProjectItem" Tag="{x:Bind ProjectPath}" Text="Delete" Icon="Delete" />
+                        <MenuFlyoutItem x:Name="DeleteProjectItem" Tag="{x:Bind ProjectPath}" Click="DeleteProjectItem_Click" Text="Delete" Icon="Delete" />
                     </MenuFlyout>
 
                 </Button.ContextFlyout>
@@ -75,7 +75,7 @@
                 <SymbolIcon Symbol="Add"/>
 
                 <Button.Flyout>
-                    <Flyout x:Name="NewProjectFlyout" Placement="RightEdgeAlignedTop" Closing="NewProjectFlyout_Closing" Closed="NewProjectFlyout_Closed" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" >
+                    <Flyout x:Name="NewProjectFlyout" Placement="RightEdgeAlignedTop" Closed="NewProjectFlyout_Closed" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" >
                         <qControl:NewProjectControl x:Name="NewProjectCtrl" OnFolderSubmit="NewProjectControl_OnFolderSubmit"/>
                         
                         <Flyout.FlyoutPresenterStyle>
@@ -94,7 +94,7 @@
         </StackPanel>
 
         <GridView
-            x:Name="BasicGridView"
+            x:Name="ProjectButtonsGrid"
             Grid.Column="1"
             ItemsSource="{Binding Projects}"
             ItemTemplate="{StaticResource ProjectButtonsTemplate}"
@@ -114,6 +114,21 @@
                 </Style>
             </GridView.ItemContainerStyle>
         </GridView>
+
+        <ContentDialog
+            x:Name="DeleteConfirmation"
+            Grid.Column="1"
+            Title="Delete Project"
+            PrimaryButtonText="Delete"
+            CloseButtonText="Cancel"
+            Width="300"
+            DefaultButton="Primary" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock TextWrapping="WrapWholeWords" Text="The project will be permanently deleted from your sytem." />
+            </StackPanel>
+
+        </ContentDialog>
 
 
         <Grid.ColumnDefinitions>
