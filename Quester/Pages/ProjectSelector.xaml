@@ -42,16 +42,13 @@
 
                 <Button.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Share" >
+                        <MenuFlyoutItem x:Name="OpenExplorerItem" Tag="{x:Bind ProjectPath}" Click="OpenExplorerItem_Click" Text="Show on Explorer" >
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE72D;" />
+                                <FontIcon Glyph="&#xF12B;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Copy" Icon="Copy" />
-                        <MenuFlyoutItem Text="Delete" Icon="Delete" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Rename" />
-                        <MenuFlyoutItem Text="Select" />
+                        <MenuFlyoutItem x:Name="DeleteProjectItem" Tag="{x:Bind ProjectPath}" Text="Delete" Icon="Delete" />
                     </MenuFlyout>
 
                 </Button.ContextFlyout>

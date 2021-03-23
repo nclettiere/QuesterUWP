@@ -139,6 +139,9 @@
     <Compile Include="Pages\ProjectSelector.xaml.cs">
       <DependentUpon>ProjectSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ProjectViewer.xaml.cs">
+      <DependentUpon>ProjectViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ProjectSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ProjectViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

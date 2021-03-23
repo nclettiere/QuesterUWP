@@ -199,7 +199,7 @@ namespace Quester
             // you can also add items in code behind
             NavigationView.MenuItems.Add(new muxc.NavigationViewItem() { Content = "Home", Icon = new SymbolIcon(Symbol.Home), Tag = "home" });
             NavigationView.MenuItems.Add(new muxc.NavigationViewItemSeparator());
-            NavigationView.MenuItems.Add(new muxc.NavigationViewItem() { Content = "App", Icon = new SymbolIcon(Symbol.AllApps), Tag = "app" });
+            NavigationView.MenuItems.Add(new muxc.NavigationViewItem() { Content = "Project Viewer", Icon = new SymbolIcon(Symbol.Library), Tag = "projectviewer" });
 
             // set the initial SelectedItem 
             foreach (muxc.NavigationViewItemBase item in NavigationView.MenuItems)
@@ -548,10 +548,10 @@ namespace Quester
                     rootFrame.Navigate(typeof(ProjectSelector));
                     break;
 
-            //    case "app":
-            //        PageHeader.Title = "New Project";
-            //        rootFrame.Navigate(typeof(NewProjectPage));
-            //        break;
+                case "projectviewer":
+                    PageHeader.Title = "Project Viewer";
+                    rootFrame.Navigate(typeof(ProjectViewer));
+                    break;
             }
         }
 

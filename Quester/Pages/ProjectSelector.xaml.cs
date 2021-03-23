@@ -10,6 +10,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,16 +20,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Quester.Pages
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Page that handles creation, deletion and selection of projects.
     /// </summary>
     public sealed partial class ProjectSelector : Page
     {
-
         public ProjectSelector()
         {
             this.InitializeComponent();
@@ -75,6 +74,20 @@ namespace Quester.Pages
         internal void ReloadProjects()
         {
             ((ProjectSelectorModel)DataContext).RetrieveAll();
+        }
+
+        private async void OpenExplorerItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MenuFlyoutItem item = sender as MenuFlyoutItem;
+                StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync((string)item.Tag);
+                await Launcher.LaunchFolderAsync(pFolder);
+            }catch(Exception ex)
+            {
+                // probably permissions issue
+                // Todo: solve file management here
+            }
         }
     }
 }

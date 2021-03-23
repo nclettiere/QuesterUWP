@@ -117,7 +117,6 @@ namespace Quester.Helper
                 StorageFolder ProjectsFolder = await IOHelper.GetProjectsFolder();
                 IReadOnlyList<StorageFolder> folderList = await ProjectsFolder.GetFoldersAsync();
 
-                int i = 0;
                 foreach (StorageFolder folder in folderList)
                 {
                     IReadOnlyList<StorageFile> projectFiles = await folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);

@@ -63,7 +63,7 @@
             Grid.Column="1"
             AlwaysShowHeader="True"
             IsBackButtonVisible="Visible"
-            IsBackEnabled="True"
+            IsBackEnabled="False"
             Header=" "
             HeaderTemplate="{StaticResource NavigationViewHeaderTemplate}"
             IsTabStop="False"
