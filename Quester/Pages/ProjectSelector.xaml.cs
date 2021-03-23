@@ -113,9 +113,10 @@ namespace Quester.Pages
             }
         }
 
-        private void OnProjectButtonClick(object sender, RoutedEventArgs e)
+        private async void OnProjectButtonClick(object sender, RoutedEventArgs e)
         {
-            // TODO: Select Project Here
+            Button pButton = sender as Button;
+            Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "ProjectSelected", (string)pButton.Tag));
         }
     }
 }

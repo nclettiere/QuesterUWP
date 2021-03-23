@@ -23,9 +23,24 @@ namespace Quester.Pages
     /// </summary>
     public sealed partial class ProjectViewer : Page
     {
+        public bool IsProjectReady { get; set; }
         public ProjectViewer()
         {
             this.InitializeComponent();
+
+            IsProjectReady = false;
+
+            Messenger.Default.Register<NotificationMessage>(this, (nm) =>
+            {
+                //Check which message you've sent
+                switch (nm.Target)
+                {
+                    case "LoadProject":
+                        //nm.Notification;
+                        IsProjectReady = true;
+                        break;
+                }
+            });
         }
 
         private void GoHome_Click(object sender, RoutedEventArgs e)

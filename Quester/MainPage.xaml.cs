@@ -76,6 +76,8 @@ namespace Quester
             }
         }
 
+        public string SelectedProject { get; set; }
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -85,14 +87,21 @@ namespace Quester
             Messenger.Default.Register<NotificationMessage>(this, (nm) =>
             {
                 //Check which message you've sent
-                if (nm.Target.Equals("Navigate"))
+                switch(nm.Target)
                 {
-                    switch(nm.Notification)
-                    {
-                        case "NewProject":
-                            NavigateTo(PageType.NewProject);
-                            break;
-                    }
+                    case "Navigate":
+                        switch (nm.Notification)
+                        {
+                            case "NewProject":
+                                NavigateTo(PageType.ProjectSelector);
+                                break;
+                        }
+                        break;
+                    case "ProjectSelected":
+                        SelectedProject = nm.Notification;
+                        NavigateTo(PageType.ProjectViewer);
+                        Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
+                        break;
                 }
             });
 
@@ -569,12 +578,21 @@ namespace Quester
 
         public void NavigateTo(PageType pageType)
         {
+            muxc.NavigationViewItem item;
+
             switch (pageType)
             {
-                case PageType.NewProject:
+                case PageType.ProjectSelector:
                     PageHeader.Title = "Select or Create Project";
-                    //rootFrame.Navigate(typeof(ProjectSelector));
-                    muxc.NavigationViewItem item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>().First(x => (string)x.Tag == "home");
+                    item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>()
+                        .First(x => (string)x.Tag == "home");
+                    NavView_Navigate(item);
+                    NavigationView.SelectedItem = item;
+                    break;
+                case PageType.ProjectViewer:
+                    PageHeader.Title = "Project Viewer";
+                    item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>()
+                        .First(x => (string)x.Tag == "projectviewer");
                     NavView_Navigate(item);
                     NavigationView.SelectedItem = item;
                     break;
@@ -595,6 +613,6 @@ namespace Quester
     {
         Settings,
         ProjectSelector,
-        NewProject
+        ProjectViewer,
     }
 }

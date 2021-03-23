@@ -15,10 +15,10 @@ namespace Quester.Controls
         public object Convert(object value, Type targetType,
             object parameter, string language)
         {
-            if (targetType != typeof(bool))
-                throw new InvalidOperationException("The target must be a boolean");
+            if (value is Boolean)
+                return !(bool)value;
 
-            return !(bool)value;
+            return false;
         }
 
         // No need to implement converting back on a one-way binding 
