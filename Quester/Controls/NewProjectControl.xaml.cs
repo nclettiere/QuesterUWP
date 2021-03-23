@@ -206,6 +206,7 @@ namespace Quester.Controls
                 if(success)
                 {
                     parent.CloseNewProjectFlyout();
+                    parent.ReloadProjects();
                 }
             }
         }

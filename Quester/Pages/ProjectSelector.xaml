@@ -91,7 +91,7 @@
                 </Button.Flyout>
 
             </Button>
-            <Button Grid.Column="0" Width="150" Height="150" BorderThickness="2" ToolTipService.ToolTip="Open Project..." VerticalAlignment="Top" Style="{ThemeResource ButtonRevealStyle}" Margin="0,20,20,0">
+            <Button Grid.Column="0" Width="150" Height="150" BorderThickness="2" IsEnabled="False" ToolTipService.ToolTip="(Not implemented yet) Open Project..." VerticalAlignment="Top" Style="{ThemeResource ButtonRevealStyle}" Margin="0,20,20,0">
                 <SymbolIcon Symbol="OpenLocal"/>
             </Button>
         </StackPanel>

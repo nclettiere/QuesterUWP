@@ -46,7 +46,6 @@ namespace Quester.Pages
 
         private void NewProjectControl_OnFolderSubmit(object sender, Controls.NewProjectArgs pArgs)
         {
-            Debug.WriteLine("Project Data: " + pArgs.Data.ToString());
             NewProjectFlyout.ShowAt(CreateProjectButton);
             NewProjectCtrl.CustomPathEntered = true;
             NewProjectCtrl.ProjectPath = pArgs.Data.ProjectPath;
@@ -66,7 +65,6 @@ namespace Quester.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             NewProjectCtrl.parent = this;
-            ReloadProjects();
         }
 
         internal void CloseNewProjectFlyout()
@@ -76,21 +74,7 @@ namespace Quester.Pages
 
         internal void ReloadProjects()
         {
-            //IReadOnlyList<string> projectFiles = await ProjectHelper.SearchForProjects();
-            //
-            //Projects.Clear();
-            //
-            //foreach (string pFile in projectFiles)
-            //{
-            //    Projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
-            //}
-
-        }
-
-        private void ReloadProjectsButton_Click(object sender, RoutedEventArgs e)
-        {
-            //ReloadProjects();
-            
+            ((ProjectSelectorModel)DataContext).RetrieveAll();
         }
     }
 }
