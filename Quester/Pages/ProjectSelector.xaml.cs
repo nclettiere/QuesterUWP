@@ -27,18 +27,11 @@ namespace Quester.Pages
     /// </summary>
     public sealed partial class ProjectSelector : Page
     {
-       
-        List<ProjectButtonData> ButtonsData;
-        List<Project> projects;
-
-        internal List<Project> Projects { get => projects; set => projects = value; }
 
         public ProjectSelector()
         {
             this.InitializeComponent();
-            DataContext = this;
-
-            Projects = new List<Project>();
+            DataContext = new ProjectSelectorModel();
         }
 
         private void BasicGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -81,22 +74,23 @@ namespace Quester.Pages
             NewProjectFlyout.Hide();
         }
 
-        internal async void ReloadProjects()
+        internal void ReloadProjects()
         {
-            IReadOnlyList<string> projectFiles = await ProjectHelper.SearchForProjects();
-
-            Projects.Clear();
-
-            foreach (string pFile in projectFiles)
-            {
-                Projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
-            }
+            //IReadOnlyList<string> projectFiles = await ProjectHelper.SearchForProjects();
+            //
+            //Projects.Clear();
+            //
+            //foreach (string pFile in projectFiles)
+            //{
+            //    Projects.Add(await Project.GetProjectFromJsonFile(this, pFile));
+            //}
 
         }
 
         private void ReloadProjectsButton_Click(object sender, RoutedEventArgs e)
         {
-            ReloadProjects();
+            //ReloadProjects();
+            
         }
     }
 }

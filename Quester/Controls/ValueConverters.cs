@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace Quester.Controls
@@ -18,6 +19,50 @@ namespace Quester.Controls
                 throw new InvalidOperationException("The target must be a boolean");
 
             return !(bool)value;
+        }
+
+        // No need to implement converting back on a one-way binding 
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToVisibility : IValueConverter
+    {
+        // This converts the DateTime object to the string to display.
+        public object Convert(object value, Type targetType,
+            object parameter, string language)
+        {
+            if (value is Boolean && (bool)value)
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
+        }
+
+        // No need to implement converting back on a one-way binding 
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToVisibilityInverse : IValueConverter
+    {
+        // This converts the DateTime object to the string to display.
+        public object Convert(object value, Type targetType,
+            object parameter, string language)
+        {
+            if (value is Boolean && (bool)value)
+            {
+                return Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
         }
 
         // No need to implement converting back on a one-way binding 

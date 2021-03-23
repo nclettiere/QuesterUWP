@@ -14,6 +14,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
                 <ResourceDictionary>
                     <ctrls:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+                    <ctrls:BoolToVisibility x:Key="BoolToVisibility" />
+                    <ctrls:BoolToVisibilityInverse x:Key="BoolToVisibilityInverse" />
                     <ctrls:ProjectPathFormatConverter x:Key="ProjectFormatConverter" />
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">

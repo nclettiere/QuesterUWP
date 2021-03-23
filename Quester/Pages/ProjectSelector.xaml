@@ -5,16 +5,16 @@
     xmlns:local="using:Quester.Pages"
     xmlns:quester="using:Quester"
     xmlns:data="using:Quester.Data"
+    xmlns:vm="using:Quester.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:Quester.ViewModels"
     xmlns:qControl="using:Quester.Controls"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     Loaded="Page_Loaded">
 
     <Page.Resources>
         <DataTemplate x:Key="ProjectButtonsTemplate" x:DataType="data:Project">
-            <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150"  BorderThickness="2"  Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind Name}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
+            <Button Grid.Column="0" Margin="10,0,10,20" Width="250" Height="150" BorderThickness="2" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="{x:Bind Name}" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalAlignment="Left">
                 <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Vertical">
                         <TextBlock Text="{x:Bind Name}" Padding="15,10,15,0"  TextTrimming="CharacterEllipsis" />
@@ -61,9 +61,10 @@
 
     <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Padding="20">
 
-        <Button x:Name="ReloadProjectsButton" Click="ReloadProjectsButton_Click" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent">
+        <Button x:Name="ReloadProjectsButton" Grid.Column="1" Height="32" IsEnabled="{Binding LoadingProjects, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding ReloadClick}" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE72C;" FontSize="15" />
+                <FontIcon Visibility="{Binding LoadingProjects, Converter={StaticResource BoolToVisibilityInverse}}" Glyph="&#xE72C;" FontSize="15" />
+                <muxc:ProgressRing Visibility="{Binding LoadingProjects, Converter={StaticResource BoolToVisibility}}" IsIndeterminate="True" Width="18" Height="18" />
                 <TextBlock Text="Reload Projects" Margin="10,0,0,0"/>
             </StackPanel>
 
@@ -98,7 +99,7 @@
         <GridView
             x:Name="BasicGridView"
             Grid.Column="1"
-            ItemsSource="{Binding Path=Projects}"
+            ItemsSource="{Binding Projects}"
             ItemTemplate="{StaticResource ProjectButtonsTemplate}"
             FlowDirection="LeftToRight">
             <GridView.ItemContainerStyle>

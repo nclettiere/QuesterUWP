@@ -12,7 +12,7 @@ using Windows.UI.Xaml;
 
 namespace Quester.Data
 {
-    class Project
+    public class Project
     {
         public string Name { get; set; }
         public string ProjectPath { get; set; }
@@ -94,7 +94,7 @@ namespace Quester.Data
             return ((ProjectHelper.FormatProjectName(Name) + @"\Quests"), (ProjectHelper.FormatProjectName(Name) + @"\Quests\DB"));
         }
 
-        public static async Task<Project> GetProjectFromJsonFile(FrameworkElement context, string pFile)
+        public static async Task<Project> GetProjectFromJsonFile(string pFile)
         {
             try
             {
