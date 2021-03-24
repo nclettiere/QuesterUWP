@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using Windows.ApplicationModel.Activation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -81,12 +82,11 @@ namespace Quester
         public MainPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             this.DataContext = new MainViewModel();
-            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             Messenger.Default.Register<NotificationMessage>(this, (nm) =>
             {
-                //Check which message you've sent
                 switch(nm.Target)
                 {
                     case "Navigate":
@@ -101,6 +101,9 @@ namespace Quester
                         SelectedProject = nm.Notification;
                         NavigateTo(PageType.ProjectViewer);
                         Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
+                        break;
+                    case "ChangeTitle":
+                        PageHeader.Title = nm.Notification;
                         break;
                 }
             });
@@ -560,6 +563,7 @@ namespace Quester
                 case "projectviewer":
                     PageHeader.Title = "Project Viewer";
                     rootFrame.Navigate(typeof(ProjectViewer));
+                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
                     break;
             }
         }
@@ -594,6 +598,7 @@ namespace Quester
                     item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>()
                         .First(x => (string)x.Tag == "projectviewer");
                     NavView_Navigate(item);
+                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
                     NavigationView.SelectedItem = item;
                     break;
             }

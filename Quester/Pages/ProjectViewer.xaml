@@ -6,14 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Grid Padding="20">
-        <StackPanel Visibility="{x:Bind IsProjectReady, Converter={StaticResource InverseBooleanConverter}}" Orientation="Horizontal">
+        <StackPanel Visibility="{x:Bind IsProjectReady, Converter={StaticResource BoolToVisibilityInverse}}" Orientation="Horizontal">
             <TextBlock Text="To continue, " VerticalAlignment="Top" Foreground="White" Height="32" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,6,0,0" />
             <HyperlinkButton x:Name="GoHome" Content="Select a project" Click="GoHome_Click" VerticalAlignment="Top" Margin="4,0,0,0"/>
         </StackPanel>
 
-        <muxc:ProgressRing Width="64" Height="64" Visibility="{x:Bind IsProjectReady, Converter={StaticResource InverseBooleanConverter}}" IsIndeterminate="True"/>
+        <muxc:ProgressRing Width="32" Height="32" IsIndeterminate="True" Margin="0,0,0,40"/>
     </Grid>
 </Page>

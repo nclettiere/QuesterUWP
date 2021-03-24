@@ -103,7 +103,7 @@ namespace Quester.Data
 
                 return JsonConvert.DeserializeObject<Project>(Json);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }

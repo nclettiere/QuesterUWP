@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,6 +40,13 @@ namespace Quester
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            #if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                this.DebugSettings.EnableFrameRateCounter = true;
+            }
+            #endif
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -66,9 +74,29 @@ namespace Quester
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    //rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    if (e.PreviousExecutionState == ApplicationExecutionState.Terminated ||
+                        e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
+                    {
+                        object value;
+                        var localSettings = ApplicationData.Current.LocalSettings;
+                        if (localSettings.Values.TryGetValue("nav", out value))
+                        {
+                            rootFrame.SetNavigationState(value as string);
+                        }
+                        else
+                        {
+                            rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                        }
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
                 }
                 // Ensure the current window is active
+
+                rootFrame.CacheSize = 4;
                 Window.Current.Activate();
             }
         }
@@ -93,7 +121,11 @@ namespace Quester
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+
+            Frame rootFrame = Window.Current.Content as Frame;
+            string navstate = rootFrame.GetNavigationState();
+            var localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["nav"] = navstate;
             deferral.Complete();
         }
     }
