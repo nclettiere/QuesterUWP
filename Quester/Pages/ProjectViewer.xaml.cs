@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using Quester.Controls;
 using Quester.Data;
+using Quester.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +11,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,22 +33,29 @@ namespace Quester.Pages
         public bool LoadingProject { get; set; }
         public ProjectViewer()
         {
-            this.InitializeComponent();
-
             IsProjectReady = false;
             LoadingProject = false;
+
+            this.InitializeComponent();
+            this.DataContext = this;
         }
 
-        private async Task<Project> LoadProject(string pFile)
+        internal async Task<Project> LoadProject(string pPath)
         {
             try
             {
-                return await Project.GetProjectFromJsonFile(pFile);
-            }catch(Exception e)
+                StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync(pPath);
+
+                string pFile = await ProjectHelper.TryGetProjectFile(pFolder);
+                Project p = await Project.GetProjectFromJsonFile(pFile);
+                return p;
+            }
+            catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return null;
             }
+
+            return null;
         }
 
         private void GoHome_Click(object sender, RoutedEventArgs e)
@@ -55,7 +65,7 @@ namespace Quester.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Messenger.Default.Register<NotificationMessage>(this, (nm) =>
+            Messenger.Default.Register<NotificationMessage>(this, async (nm) =>
             {
                 switch (nm.Target)
                 {
@@ -63,33 +73,48 @@ namespace Quester.Pages
                         if (!LoadingProject)
                         {
                             LoadingProject = true;
-
-                            //this.Frame.Navigate(typeof(ProjectSelector), "home");
+                            PLoaderRing.Visibility = Visibility.Visible;
+            
                             if (nm.Notification != null)
                             {
                                 Debug.WriteLine(nm.Notification);
-
-                                Project p = LoadProject(nm.Notification).ConfigureAwait(false).GetAwaiter().GetResult();
-
+            
+                                Project p = await LoadProject(nm.Notification);
+            
                                 if (p != null)
                                 {
-                                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "ChangeTitle", p.Name));
-                                    IsProjectReady = true;
-                                    LoadingProject = false;
+                                   
+                                        Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "ChangeTitle", p.Name));
+                                        IsProjectReady = true;
+                                        LoadingProject = false;
+                                        //InitialMessageText.Visibility = Visibility.Collapsed;
+                                        PLoaderRing.Visibility = Visibility.Collapsed;
+                                        ViewerFrame.Navigate(typeof(ProjectPreviewControl));
                                 }
-
-                                IsProjectReady = false;
-                                LoadingProject = false;
+                                else
+                                {
+                                    IsProjectReady = false;
+                                    LoadingProject = false;
+                                    //InitialMessageText.Visibility = Visibility.Collapsed;
+                                    PLoaderRing.Visibility = Visibility.Collapsed;
+                                }
                             }
                             else
                             {
                                 IsProjectReady = false;
                                 LoadingProject = false;
+                                //InitialMessageText.Visibility = Visibility.Collapsed;
+                                PLoaderRing.Visibility = Visibility.Collapsed;
                             }
                         }
                         break;
                 }
             });
+        }
+
+        private void ViewerFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+
         }
     }
 }

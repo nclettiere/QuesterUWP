@@ -124,11 +124,30 @@ namespace Quester.Helper
                     var ProjectMain = projectFiles.Where(f => List.Any(e => e == Path.GetExtension(f.FileType)))
                               .Select(f => f.Path);
 
-                    pFiles.Add(ProjectMain.First());
+                    try
+                    {
+                        pFiles.Add(ProjectMain.First());
+                    }catch(Exception e) { Debug.WriteLine(e.Message); };
                 }
             }
 
             return pFiles;
+        }
+
+        public static async Task<string> TryGetProjectFile(StorageFolder pFolder)
+        {
+            IReadOnlyList<StorageFile> projectFiles = await pFolder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
+            var List = new List<string>() { ".qter", ".quester", ".qtr" };
+            var ProjectMain = projectFiles.Where(f => List.Any(e => e == Path.GetExtension(f.FileType)))
+                      .Select(f => f.Path);
+            try
+            {
+                return ProjectMain.First();
+            }catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
         }
     }
 }

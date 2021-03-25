@@ -41,6 +41,7 @@ namespace Quester
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
+        ProjectViewer ProjectViewerCached { get; set; }
         public static Frame RootFrame = null;
         private static Type CurrentFrameType = null;
         private static object LastNavSelectedItem = null;
@@ -84,6 +85,7 @@ namespace Quester
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             this.DataContext = new MainViewModel();
+            ProjectViewerCached = new ProjectViewer();
 
             Messenger.Default.Register<NotificationMessage>(this, (nm) =>
             {
@@ -551,7 +553,7 @@ namespace Quester
             controlsSearchBox.Focus(FocusState.Programmatic);
         }
 
-        private void NavView_Navigate(muxc.NavigationViewItem item)
+        private async void NavView_Navigate(muxc.NavigationViewItem item)
         {
             switch (item.Tag)
             {
@@ -562,8 +564,10 @@ namespace Quester
 
                 case "projectviewer":
                     PageHeader.Title = "Project Viewer";
-                    rootFrame.Navigate(typeof(ProjectViewer));
-                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
+                    rootFrame.Navigate(typeof(ProjectViewer), ProjectViewerCached);
+                    await ProjectViewerCached.LoadProject(SelectedProject);
+                    //rootFrame.Navigate(typeof(ProjectViewer));
+                    //Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
                     break;
             }
         }

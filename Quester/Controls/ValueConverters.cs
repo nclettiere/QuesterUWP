@@ -1,6 +1,7 @@
 ﻿using Quester.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,21 +32,22 @@ namespace Quester.Controls
 
     public class BoolToVisibility : IValueConverter
     {
-        // This converts the DateTime object to the string to display.
-        public object Convert(object value, Type targetType,
-            object parameter, string language)
+        private object GetVisibility(object value)
         {
-            if (value is Boolean && (bool)value)
+            if (!(value is bool))
+                return Visibility.Collapsed;
+            bool objValue = (bool)value;
+            if (objValue)
             {
                 return Visibility.Visible;
             }
-
             return Visibility.Collapsed;
         }
-
-        // No need to implement converting back on a one-way binding 
-        public object ConvertBack(object value, Type targetType,
-            object parameter, string language)
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return GetVisibility(value);
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -53,21 +55,22 @@ namespace Quester.Controls
 
     public class BoolToVisibilityInverse : IValueConverter
     {
-        // This converts the DateTime object to the string to display.
-        public object Convert(object value, Type targetType,
-            object parameter, string language)
+        private object GetVisibility(object value)
         {
-            if (value is Boolean && (bool)value)
+            if (!(value is bool))
+                return Visibility.Collapsed;
+            bool objValue = (bool)value;
+            if (objValue)
             {
                 return Visibility.Collapsed;
             }
-
             return Visibility.Visible;
         }
-
-        // No need to implement converting back on a one-way binding 
-        public object ConvertBack(object value, Type targetType,
-            object parameter, string language)
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return GetVisibility(value);
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

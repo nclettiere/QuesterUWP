@@ -99,7 +99,7 @@ namespace Quester.Data
             try
             {
                 StorageFile DefaultFile = await StorageFile.GetFileFromPathAsync(pFile);
-                string Json = FileIO.ReadTextAsync(DefaultFile).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+                string Json = await FileIO.ReadTextAsync(DefaultFile);
 
                 return JsonConvert.DeserializeObject<Project>(Json);
             }

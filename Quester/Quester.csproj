@@ -123,6 +123,9 @@
     <Compile Include="Controls\NewProjectControl.xaml.cs">
       <DependentUpon>NewProjectControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProjectPreviewControl.xaml.cs">
+      <DependentUpon>ProjectPreviewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ValueConverters.cs" />
     <Compile Include="Data\Project.cs" />
     <Compile Include="Data\ProjectButtonData.cs" />
@@ -171,6 +174,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\NewProjectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ProjectPreviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
