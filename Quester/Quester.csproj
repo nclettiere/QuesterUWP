@@ -121,6 +121,9 @@
     </Compile>
     <Compile Include="Controls\ControlProperties.cs" />
     <Compile Include="Controls\Extensions.cs" />
+    <Compile Include="Controls\FeatureStatusControl.xaml.cs">
+      <DependentUpon>FeatureStatusControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NewProjectControl.xaml.cs">
       <DependentUpon>NewProjectControl.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\FeatureStatusControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NewProjectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

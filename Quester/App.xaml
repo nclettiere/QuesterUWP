@@ -64,14 +64,14 @@
                         TintColor="#FF7F0000"
                         TintOpacity="0.8"
                         Windows10version1903:TintLuminosityOpacity="0.9"
-                        FallbackColor="#FF570000" />
+                        FallbackColor="#FF7F0000" />
 
                     <AcrylicBrush x:Key="PanelBrushLight"
                         BackgroundSource="HostBackdrop"
                         TintColor="#FFC50000"
                         TintOpacity="0.8"
                         Windows10version1903:TintLuminosityOpacity="0.9"
-                        FallbackColor="#FFA60000" />
+                        FallbackColor="#FF7F0000" />
 
                     <Color x:Key="SystemPrimaryColor">#FFFF0000</Color>
                     <Color x:Key="SystemAccentColor">Yellow</Color>
