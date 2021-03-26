@@ -36,7 +36,7 @@
                                     BackgroundSource="HostBackdrop"
                                     TintColor="#FF7F0000"
                                     TintOpacity="0.8"
-                                    Windows10version1903:TintLuminosityOpacity="0.5"
+                                    Windows10version1903:TintLuminosityOpacity=".9"
                                     FallbackColor="#FF500000"/>
                             </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
@@ -51,13 +51,27 @@
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
-                    
+
                     <AcrylicBrush x:Key="MyAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         TintColor="#FFFF0000"
                         TintOpacity="0.8"
-                        Windows10version1903:TintLuminosityOpacity="0.5"
+                        Windows10version1903:TintLuminosityOpacity="0.88"
                         FallbackColor="#FF7F0000" />
+
+                    <AcrylicBrush x:Key="PanelBrush"
+                        BackgroundSource="HostBackdrop"
+                        TintColor="#FF7F0000"
+                        TintOpacity="0.8"
+                        Windows10version1903:TintLuminosityOpacity="0.9"
+                        FallbackColor="#FF570000" />
+
+                    <AcrylicBrush x:Key="PanelBrushLight"
+                        BackgroundSource="HostBackdrop"
+                        TintColor="#FFC50000"
+                        TintOpacity="0.8"
+                        Windows10version1903:TintLuminosityOpacity="0.9"
+                        FallbackColor="#FFA60000" />
 
                     <Color x:Key="SystemPrimaryColor">#FFFF0000</Color>
                     <Color x:Key="SystemAccentColor">Yellow</Color>

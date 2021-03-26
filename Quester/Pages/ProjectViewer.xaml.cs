@@ -31,40 +31,18 @@ namespace Quester.Pages
     {
         public bool IsProjectReady { get; set; }
         public bool LoadingProject { get; set; }
+        public string CurrentProjectPath { get; set; }
+        public Project CurrentProject { get; set; }
         public ProjectViewer()
         {
             IsProjectReady = false;
             LoadingProject = false;
+            CurrentProjectPath = String.Empty;
+            CurrentProject = null;
 
             this.InitializeComponent();
             this.DataContext = this;
-        }
 
-        internal async Task<Project> LoadProject(string pPath)
-        {
-            try
-            {
-                StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync(pPath);
-
-                string pFile = await ProjectHelper.TryGetProjectFile(pFolder);
-                Project p = await Project.GetProjectFromJsonFile(pFile);
-                return p;
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-
-            return null;
-        }
-
-        private void GoHome_Click(object sender, RoutedEventArgs e)
-        {
-            Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
             Messenger.Default.Register<NotificationMessage>(this, async (nm) =>
             {
                 switch (nm.Target)
@@ -74,42 +52,57 @@ namespace Quester.Pages
                         {
                             LoadingProject = true;
                             PLoaderRing.Visibility = Visibility.Visible;
-            
+
                             if (nm.Notification != null)
                             {
-                                Debug.WriteLine(nm.Notification);
-            
-                                Project p = await LoadProject(nm.Notification);
-            
-                                if (p != null)
-                                {
-                                   
-                                        Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "ChangeTitle", p.Name));
-                                        IsProjectReady = true;
-                                        LoadingProject = false;
-                                        //InitialMessageText.Visibility = Visibility.Collapsed;
-                                        PLoaderRing.Visibility = Visibility.Collapsed;
-                                        ViewerFrame.Navigate(typeof(ProjectPreviewControl));
-                                }
-                                else
-                                {
-                                    IsProjectReady = false;
-                                    LoadingProject = false;
-                                    //InitialMessageText.Visibility = Visibility.Collapsed;
-                                    PLoaderRing.Visibility = Visibility.Collapsed;
-                                }
+                                CurrentProjectPath = nm.Notification;
                             }
                             else
                             {
-                                IsProjectReady = false;
-                                LoadingProject = false;
-                                //InitialMessageText.Visibility = Visibility.Collapsed;
-                                PLoaderRing.Visibility = Visibility.Collapsed;
+                                CurrentProjectPath = String.Empty;
                             }
                         }
                         break;
                 }
             });
+        }
+
+        internal async Task<Project> LoadProject()
+        {
+            if (!String.IsNullOrEmpty(CurrentProjectPath))
+            {
+                PLoaderRing.Visibility = Visibility.Visible;
+                try
+                {
+                    StorageFolder pFolder = await StorageFolder.GetFolderFromPathAsync(CurrentProjectPath);
+
+                    string pFile = await ProjectHelper.TryGetProjectFile(pFolder);
+                    Project p = await Project.GetProjectFromJsonFile(pFile);
+                    return p;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+
+            return null;
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            Project p = await LoadProject();
+            if (p != null)
+            {
+                Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "ChangeTitle", p.Name));
+                
+                CurrentProject = p;
+                Extensions.SetProject(pPreviewControl, p);
+                pPreviewControl.ProjectNeedsUpdate();
+                PLoaderRing.Visibility = Visibility.Collapsed;
+                return;
+            }
+            PLoaderRing.Visibility = Visibility.Collapsed;
         }
 
         private void ViewerFrame_Navigated(object sender, NavigationEventArgs e)

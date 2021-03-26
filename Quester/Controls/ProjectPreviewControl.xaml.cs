@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Quester.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +24,38 @@ namespace Quester.Controls
     /// </summary>
     public sealed partial class ProjectPreviewControl : Page
     {
+        public Project PreviewProject { get; set; }
+        public bool IsProjectReady { get; set; }
+
         public ProjectPreviewControl()
         {
             this.InitializeComponent();
+            this.DataContext = this;
+            PreviewProject = null;
+            IsProjectReady = false;
+        }
+
+
+        internal void ProjectNeedsUpdate()
+        {
+            PreviewProject = Extensions.GetProject(this);
+            if (PreviewProject != null)
+            {
+                IsProjectReady = true;
+                InitialMessageText.Visibility = Visibility.Collapsed;
+                ProjectNameText.Text = PreviewProject.Name;
+                return;
+            }
+            InitialMessageText.Visibility = Visibility.Visible;
+        }
+
+        private void GoHome_Click(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

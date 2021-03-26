@@ -565,11 +565,11 @@ namespace Quester
                 case "projectviewer":
                     PageHeader.Title = "Project Viewer";
                     rootFrame.Navigate(typeof(ProjectViewer), ProjectViewerCached);
-                    await ProjectViewerCached.LoadProject(SelectedProject);
-                    //rootFrame.Navigate(typeof(ProjectViewer));
-                    //Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
+                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
                     break;
             }
+
+            NavigationView.IsPaneOpen = false;
         }
 
         private void NavigationViewControl_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)
@@ -586,7 +586,7 @@ namespace Quester
 
         public void NavigateTo(PageType pageType)
         {
-            muxc.NavigationViewItem item;
+            muxc.NavigationViewItem item = null;
 
             switch (pageType)
             {
@@ -594,17 +594,19 @@ namespace Quester
                     PageHeader.Title = "Select or Create Project";
                     item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>()
                         .First(x => (string)x.Tag == "home");
-                    NavView_Navigate(item);
-                    NavigationView.SelectedItem = item;
                     break;
                 case PageType.ProjectViewer:
                     PageHeader.Title = "Project Viewer";
                     item = NavigationView.MenuItems.OfType<muxc.NavigationViewItem>()
                         .First(x => (string)x.Tag == "projectviewer");
-                    NavView_Navigate(item);
-                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "LoadProject", SelectedProject));
-                    NavigationView.SelectedItem = item;
                     break;
+            }
+
+            if(item != null)
+            {
+                NavView_Navigate(item);
+                NavigationView.SelectedItem = item;
+                NavigationView.IsPaneOpen = false;
             }
         }
     }

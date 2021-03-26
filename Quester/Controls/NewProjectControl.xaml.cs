@@ -76,9 +76,7 @@ namespace Quester.Controls
 
         private NewProjectData projectData;
 
-        // The delegate procedure we are assigning to our object
         public delegate void NewProjectHandler(object sender, NewProjectArgs pArgs);
-
         public event NewProjectHandler OnFolderSubmit;
 
         public NewProjectData ProjectData

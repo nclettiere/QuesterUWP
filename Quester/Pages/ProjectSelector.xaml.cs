@@ -33,11 +33,6 @@ namespace Quester.Pages
             DataContext = new ProjectSelectorModel();
         }
 
-        //private void CreateProjectButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(this, "Navigate", "NewProject"));
-        //}
-
         private void NewProjectControl_OnFolderSubmit(object sender, Controls.NewProjectArgs pArgs)
         {
             NewProjectFlyout.ShowAt(CreateProjectButton);
