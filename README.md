@@ -4,7 +4,7 @@
 
 ## What is this project about?
 <p>
-Quester is a <strong>Windows-only</strong> program for creating and develop quests, dialogues and characters for various game engines and other types of software (you can write your own wrapper).<br/><br/>
+Quester is a <strong>Windows-only</strong> program for creating and develop missions, dialogues and characters for various game engines and other types of software (you can write your own wrapper).<br/><br/>
 NOTE: The project is currently in an early stage, and its features are not implemented yet.
 </p>
 
